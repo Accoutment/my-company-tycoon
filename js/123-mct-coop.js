@@ -58,13 +58,19 @@
   #coopHud .chat{max-height:90px;overflow:auto;font-size:12px;margin:6px 0;color:#e8edff}
   #coopHud input{width:100%;box-sizing:border-box;font:inherit;font-size:13px;padding:4px 6px;border-radius:6px;border:2px solid #4b5aa8;background:#0f1430;color:#fff}
   #coopHud button{font:inherit;font-weight:700;font-size:12px;cursor:pointer;border-radius:7px;border:2px solid #10265a;background:#3a4380;color:#fff;padding:3px 9px;margin-top:6px;margin-right:4px}
-  #coopOverlay{position:absolute;left:0;top:0;pointer-events:none;z-index:6}
+  #coopOverlay{position:fixed;left:0;top:0;pointer-events:none;z-index:6}
+  #coopWin{position:fixed;inset:0;z-index:99999;background:rgba(5,8,20,.78);display:none;align-items:center;justify-content:center;font-family:Kanit,sans-serif}#coopWin.show{display:flex}
+  #coopWin .w{width:min(420px,92vw);background:#141a33;border:3px solid #e0b030;border-radius:14px;padding:18px;color:#fff;text-align:center}#coopWin h2{margin:0 0 6px;font-size:20px;color:#ffd35c}
+  #coopWin .code{font-size:42px;font-weight:800;letter-spacing:8px;color:#fff;background:#0b1024;border-radius:10px;padding:6px;margin:8px 0;cursor:pointer}
+  #coopWin .pl{text-align:left;padding:5px 8px;margin:4px 0;background:#1f2850;border-radius:8px;font-size:14px}#coopWin .op{font-size:13px;color:#ffe9a8;margin:8px 0}
+  #coopWin button{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:2px solid #10265a;background:#3a4380;color:#fff;padding:8px 14px;margin:6px 4px 0}#coopWin button.go{background:#e0b030;color:#241800;border-color:#7a5a00;font-size:16px}
   `;
   document.head.appendChild(css);
 
   /* ================================================================ LOBBY (before entering the game) */
+  const CHAR_TH = { 'blue-suit-male': 'ผู้ชาย', 'mild-formal': 'ผู้หญิง', 'rei': 'Rei' };
   function charList() {
-    try { return Object.keys(CHAR_ASSETS).filter(k => CHAR_ASSETS[k] && CHAR_ASSETS[k].portrait && CHAR_ASSETS[k].frames); } catch (e) { return []; }
+    try { return Object.keys(CHAR_TH).filter(k => CHAR_ASSETS[k] && CHAR_ASSETS[k].portrait && CHAR_ASSETS[k].frames); } catch (e) { return []; }
   }
   function relList() {
     try { return REL.IDS.map(id => [id, (REL.RDEF && REL.RDEF[id] && REL.RDEF[id].name) || REL_TH[id] || id]); } catch (e) { return Object.entries(REL_TH); }
@@ -97,7 +103,7 @@
     q('#cpRel').value = localStorage.getItem('mct_coop_rel') || 'none';
     const grid = q('#cpChars');
     function drawChars() {
-      grid.innerHTML = chars.map(k => `<div class="ch${k === pick ? ' on' : ''}" data-k="${k}"><img src="${CHAR_ASSETS[k].portrait}" alt=""><div>${k.replace(/-/g, ' ')}</div></div>`).join('');
+      grid.innerHTML = chars.map(k => `<div class="ch${k === pick ? ' on' : ''}" data-k="${k}"><img src="${CHAR_ASSETS[k].portrait}" alt=""><div>${CHAR_TH[k] || k}</div></div>`).join('');
       grid.querySelectorAll('.ch').forEach(e => e.onclick = () => { pick = e.dataset.k; drawChars(); });
     }
     drawChars();
@@ -132,7 +138,7 @@
         if (r.t === 'room' && !done) {
           done = true; clearTimeout(timer);
           q('#cpMsg').style.color = '#9dffb0'; q('#cpMsg').textContent = 'รหัสห้อง ' + r.code + ' · กำลังเข้าเกม...';
-          try { sessionStorage.setItem('mct_coop', JSON.stringify({ code: r.code, name, rel, char: pick, url })); } catch (e) { }
+          try { sessionStorage.setItem('mct_coop', JSON.stringify({ code: r.code, name, rel, char: pick, url })); sessionStorage.setItem('mct_coop_win', '1'); } catch (e) { }
           try { ws.close(); } catch (e) { }
           setTimeout(() => location.reload(), 400);
         }
@@ -174,6 +180,7 @@
     if (m.opts.quest === 'shared') { QKEYS.forEach(k => { const t = (m.quest || {})[k]; if (t && S.q) { S.q[k] = S.q[k] || {}; for (const id in t) S.q[k][id] = t[id]; } }); }
     snapQ();
     renderHud(); toast('เข้าห้อง ' + m.code + ' แล้ว');
+    try { if (sessionStorage.getItem('mct_coop_win') === '1') { sessionStorage.removeItem('mct_coop_win'); setTimeout(showRoomWin, 600); } } catch (e) { }
   }
   function snapQ() {
     Co.prevQ = {};
@@ -266,7 +273,7 @@
       CEOI = cv; return true;
     } catch (e) { console.warn('[coop avatar]', e); return true; }
   }
-  { let tries = 0; const iv = setInterval(() => { if (buildAvatar() || ++tries > 60) clearInterval(iv); }, 1000); }
+  /* buildAvatar() ปิดไว้: ชนกับระบบชุด (wardrobe) ที่สลับ CEOI เหมือนกัน และเสี่ยงทำให้ฉากดำ */
 
   function connect() {
     const url = BOOT.url || serverUrl();
@@ -319,10 +326,11 @@
       <div class="opts">💰 เงิน${MODE_TH[o.money] || ''} · 🏢 ออฟฟิศ${MODE_TH[o.office] || ''} · 📜 เควสต์${MODE_TH[o.quest] || ''}</div>
       <div class="chat" id="cpLog">${Co.chat.slice(-8).map(esc).join('<br>')}</div>
       <input id="cpSay" maxlength="120" placeholder="พิมพ์แล้วกด Enter" autocomplete="off">
-      <button id="cpCopy">คัดลอกรหัส</button><button id="cpLeave">ออกจากห้อง</button></div>`;
+      <button id="cpWin">หน้าต่างห้อง</button><button id="cpCopy">คัดลอกรหัส</button><button id="cpLeave">ออกจากห้อง</button></div>`;
     hud.querySelector('#cpChip').onclick = () => { hudOpen = !hudOpen; renderHud(); };
     const inp = hud.querySelector('#cpSay'); inp.value = val; if (keepIn) inp.focus();
     inp.onkeydown = e => { e.stopPropagation(); if (e.key === 'Enter' && inp.value.trim()) { send({ t: 'chat', text: inp.value.trim() }); inp.value = ''; } };
+    hud.querySelector('#cpWin').onclick = () => showRoomWin();
     const wk = hud.querySelector('#cpWake'); if (wk) wk.onclick = () => { Co.wake = 1; };
     hud.querySelector('#cpCopy').onclick = () => { try { navigator.clipboard.writeText(Co.code); toast('คัดลอกรหัสห้องแล้ว'); } catch (e) { toast('รหัสห้อง ' + Co.code); } };
     hud.querySelector('#cpLeave').onclick = () => { if (confirm('ออกจากห้อง Co-op และกลับหน้าเมนู?')) leaveCoop(); };
@@ -341,8 +349,8 @@
     let ctx; try { ctx = window.__CEO_CTX; } catch (e) { return; }
     const cvs = $('ceoSceneCanvas'), wrap = $('ceoSceneCanvasWrap');
     if (!ctx || !cvs || !wrap) return;
-    if (!ov) { ov = document.createElement('canvas'); ov.id = 'coopOverlay'; ov.width = 960; ov.height = 600; wrap.appendChild(ov); octx = ov.getContext('2d'); if (getComputedStyle(wrap).position === 'static') wrap.style.position = 'relative'; }
-    ov.style.left = cvs.offsetLeft + 'px'; ov.style.top = cvs.offsetTop + 'px'; ov.style.width = cvs.offsetWidth + 'px'; ov.style.height = cvs.offsetHeight + 'px';
+    if (!ov) { ov = document.createElement('canvas'); ov.id = 'coopOverlay'; ov.width = 960; ov.height = 600; document.body.appendChild(ov); octx = ov.getContext('2d'); }
+    const rc = cvs.getBoundingClientRect(); ov.style.left = rc.left + 'px'; ov.style.top = rc.top + 'px'; ov.style.width = rc.width + 'px'; ov.style.height = rc.height + 'px'; ov.style.display = rc.width > 0 ? 'block' : 'none';
     octx.setTransform(1, 0, 0, 1, 0, 0); octx.clearRect(0, 0, 960, 600);
     const st = ctx.st; if (!st || !st.active) return;
     const here = st.place || 'office', z = st.zoom || 1;
@@ -393,6 +401,22 @@
     Co.onEv('mystery', () => replay(() => playMysteryCutscene(0)));
     Co.onEv('thief', d => replay(() => THIEF.play(d && d.kind === 'catch' ? 'catch' : 'theft', 120, { preview: true })));
   }
+
+  /* ---------------------------------------------------------------- room window (เด้งทันทีหลังสร้าง/เข้าห้อง) */
+  let rw = null;
+  function showRoomWin() {
+    if (!rw) { rw = document.createElement('div'); rw.id = 'coopWin'; document.body.appendChild(rw); rw.addEventListener('keydown', e => e.stopPropagation(), true); rw.addEventListener('keyup', e => e.stopPropagation(), true); }
+    const o = Co.opts || {}, mineName = BOOT.name || '';
+    const rows = [`<div class="pl"><b>${esc(mineName)} (คุณ)${Co.host === Co.you ? ' 👑' : ''}</b></div>`].concat([...Co.others.values()].map(p => `<div class="pl"><b>${esc(p.name)}${Co.host === p.id ? ' 👑' : ''}</b> · ${esc(REL_TH[p.rel] || '')}</div>`));
+    rw.innerHTML = `<div class="w"><h2>🤝 ห้อง Co-op</h2><div>ส่งรหัสนี้ให้เพื่อน (แตะเพื่อคัดลอก)</div><div class="code" id="cwCode">${esc(Co.code)}</div>
+      ${rows.join('')}<div class="op">💰 เงิน${MODE_TH[o.money] || ''} · 🏢 ออฟฟิศ${MODE_TH[o.office] || ''} · 📜 เควสต์${MODE_TH[o.quest] || ''}</div>
+      <button class="go" id="cwGo">▶ เริ่มเล่น</button><button id="cwNew">เริ่มเกมใหม่ (ล้างเซฟ Co-op)</button></div>`;
+    rw.classList.add('show');
+    rw.querySelector('#cwCode').onclick = () => { try { navigator.clipboard.writeText(Co.code); toast('คัดลอกรหัสห้องแล้ว'); } catch (e) { } };
+    rw.querySelector('#cwGo').onclick = () => rw.classList.remove('show');
+    rw.querySelector('#cwNew').onclick = () => { if (!confirm('ล้างเซฟ Co-op ทั้งหมดแล้วเริ่มเกมใหม่?')) return; try { const ks = []; for (let i = 0; i < localStorage.length; i++) ks.push(localStorage.key(i)); ks.forEach(k => { if (k === 'mct2' || k === 'mct_idx' || String(k).indexOf('mct_slot_') === 0) localStorage.removeItem(k); }); sessionStorage.setItem('mct_skip_lobby', '1'); sessionStorage.setItem('mct_coop_win', '0'); } catch (e) { } window.__resetting = 1; location.reload(); };
+  }
+  Co.showRoomWin = showRoomWin;
 
   /* ---------------------------------------------------------------- start */
   if (BOOT) {

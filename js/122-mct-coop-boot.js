@@ -5,6 +5,7 @@
   try {
     var raw = sessionStorage.getItem('mct_coop'); if (!raw) return;
     window.__COOP_BOOT = JSON.parse(raw);
+    sessionStorage.setItem('mct_skip_lobby', '1');            // ข้ามหน้าเมนูหลัก เข้าเกม (ใช้เซฟ Co-op ล่าสุด) แล้วเด้งหน้าต่างห้อง
     var P = Storage.prototype, g = P.getItem, s = P.setItem, r = P.removeItem, kf = P.key, ld = Object.getOwnPropertyDescriptor(P, 'length');
     var PRE = 'coop:';
     var fam = function (k) { k = String(k); return k === 'mct2' || k === 'mct_idx' || k.indexOf('mct_slot_') === 0; };
