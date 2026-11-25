@@ -2,3 +2,4 @@ dist/
 node_modules/
 *.log
 push_log.txt
+pull_log.txt

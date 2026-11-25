@@ -29,11 +29,15 @@ if not exist ".git" "%GIT%" init -b main
 "%GIT%" config user.email >nul 2>nul || "%GIT%" config user.email "Accoutment@users.noreply.github.com"
 "%GIT%" rm -r --cached -q --ignore-unmatch dist >nul 2>nul
 findstr /x "push_log.txt" .gitignore >nul 2>nul || echo push_log.txt>>.gitignore
+findstr /x "pull_log.txt" .gitignore >nul 2>nul || echo pull_log.txt>>.gitignore
 "%GIT%" add -A
 "%GIT%" commit -m "Add Co-op online mode" >nul 2>nul
 "%GIT%" branch -M main
 "%GIT%" remote remove origin >nul 2>nul
 "%GIT%" remote add origin https://github.com/Accoutment/my-company-tycoon.git
+echo Syncing with GitHub...
+"%GIT%" pull --rebase --no-edit origin main > pull_log.txt 2>&1
+if errorlevel 1 "%GIT%" rebase --abort >nul 2>nul
 echo Pushing... a GitHub sign-in window may appear - please sign in.
 "%GIT%" push -u origin main > push_log.txt 2>&1
 set ERR=%errorlevel%
