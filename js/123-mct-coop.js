@@ -66,7 +66,7 @@
   #coopWin button{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:2px solid #10265a;background:#3a4380;color:#fff;padding:8px 14px;margin:6px 4px 0}#coopWin button.go{background:#e0b030;color:#241800;border-color:#7a5a00;font-size:16px}
 
   /* ---- สไตล์ให้เหมือนเมนูเกม (พิกเซล/ขอบหนา/ปุ่มนูน) ---- */
-  #coopBtn{position:absolute!important;left:41.7%!important;top:91.9%!important;bottom:auto!important;transform:none!important;width:21.8%!important;height:7.4%!important;display:flex!important;align-items:center;gap:8px;padding:0 .6em!important;box-sizing:border-box;font:800 clamp(10px,1.45vw,18px) 'Kanit',sans-serif!important;white-space:nowrap;color:#fff!important;background:#2fae58!important;border:4px solid #0a0820!important;border-radius:6px!important;cursor:pointer;text-shadow:2px 2px 0 rgba(0,0,0,.45);box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.35),0 6px 0 #0a0820!important;transition:transform .1s,filter .1s}
+  #coopBtn{position:fixed!important;right:max(12px,env(safe-area-inset-right))!important;bottom:max(10px,env(safe-area-inset-bottom))!important;left:auto!important;top:auto!important;transform:none!important;width:auto!important;min-width:150px;max-width:44vw;height:auto!important;z-index:60;display:flex!important;align-items:center;gap:8px;padding:.45em .9em!important;box-sizing:border-box;font:800 clamp(12px,3.2vmin,20px) 'Kanit',sans-serif!important;white-space:nowrap;color:#fff!important;background:#2fae58!important;border:4px solid #0a0820!important;border-radius:6px!important;cursor:pointer;text-shadow:2px 2px 0 rgba(0,0,0,.45);box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.35),0 6px 0 #0a0820!important;transition:transform .1s,filter .1s}
   #coopBtn .ic{width:1.6em;text-align:center}#coopBtn .tx{flex:1;text-align:center;line-height:1.05}
   #coopBtn:hover{transform:translateY(-3px) scale(1.04)!important;filter:brightness(1.15)}#coopBtn:active{transform:translateY(4px) scale(.97)!important;box-shadow:inset 0 -2px 0 rgba(0,0,0,.28),0 1px 0 #0a0820!important}
   #coopMenu,#coopWin{font-family:'Kanit',sans-serif}
@@ -170,7 +170,7 @@
   function initLobbyButton() {
     const L = $('lobby'); if (!L || $('coopBtn')) return;
     const b = document.createElement('button'); b.id = 'coopBtn'; b.type = 'button'; b.innerHTML = '<span class="ic">🤝</span><span class="tx">Co-op เล่นกับเพื่อน</span>';
-    (L.querySelector('.lz-stage') || L).appendChild(b);
+    L.appendChild(b);
     let menu = null; b.onclick = () => { menu = menu || buildMenu(); menu.classList.add('show'); };
   }
 
