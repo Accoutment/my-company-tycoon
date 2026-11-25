@@ -23,9 +23,10 @@ const server = http.createServer((req, res) => {
   if (!file.startsWith(ROOT) || BLOCK.test(path.relative(ROOT, file).split(path.sep).join('/'))) { res.writeHead(404); return res.end('not found'); }
   fs.stat(file, (err, st) => {
     if (err || !st.isFile()) { res.writeHead(404); return res.end('not found'); }
+    const cc = url.startsWith('/assets/') ? 'public, max-age=31536000, immutable' : 'no-cache';
     const ext = path.extname(file).toLowerCase(), etag = `"${st.size.toString(36)}-${Math.floor(st.mtimeMs).toString(36)}"`;
-    if (req.headers['if-none-match'] === etag) { res.writeHead(304, { ETag: etag, 'Cache-Control': 'no-cache' }); return res.end(); }
-    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Content-Length': st.size, ETag: etag, 'Cache-Control': 'no-cache' });
+    if (req.headers['if-none-match'] === etag) { res.writeHead(304, { ETag: etag, 'Cache-Control': cc }); return res.end(); }
+    res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Content-Length': st.size, ETag: etag, 'Cache-Control': cc });
     fs.createReadStream(file).pipe(res);
   });
 });

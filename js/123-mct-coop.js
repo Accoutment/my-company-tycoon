@@ -64,6 +64,27 @@
   #coopWin .code{font-size:42px;font-weight:800;letter-spacing:8px;color:#fff;background:#0b1024;border-radius:10px;padding:6px;margin:8px 0;cursor:pointer}
   #coopWin .pl{text-align:left;padding:5px 8px;margin:4px 0;background:#1f2850;border-radius:8px;font-size:14px}#coopWin .op{font-size:13px;color:#ffe9a8;margin:8px 0}
   #coopWin button{font:inherit;font-weight:700;cursor:pointer;border-radius:9px;border:2px solid #10265a;background:#3a4380;color:#fff;padding:8px 14px;margin:6px 4px 0}#coopWin button.go{background:#e0b030;color:#241800;border-color:#7a5a00;font-size:16px}
+
+  /* ---- สไตล์ให้เหมือนเมนูเกม (พิกเซล/ขอบหนา/ปุ่มนูน) ---- */
+  #coopBtn{position:absolute!important;left:41.7%!important;top:91.9%!important;bottom:auto!important;transform:none!important;width:21.8%!important;height:7.4%!important;display:flex!important;align-items:center;gap:8px;padding:0 .6em!important;box-sizing:border-box;font:800 clamp(12px,1.9vw,22px) 'Kanit',sans-serif!important;color:#fff!important;background:#2fae58!important;border:4px solid #0a0820!important;border-radius:6px!important;cursor:pointer;text-shadow:2px 2px 0 rgba(0,0,0,.45);box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.35),0 6px 0 #0a0820!important;transition:transform .1s,filter .1s}
+  #coopBtn .ic{width:1.6em;text-align:center}#coopBtn .tx{flex:1;text-align:center;line-height:1.05}
+  #coopBtn:hover{transform:translateY(-3px) scale(1.04)!important;filter:brightness(1.15)}#coopBtn:active{transform:translateY(4px) scale(.97)!important;box-shadow:inset 0 -2px 0 rgba(0,0,0,.28),0 1px 0 #0a0820!important}
+  #coopMenu,#coopWin{font-family:'Kanit',sans-serif}
+  #coopMenu .cp,#coopWin .w{background:#221a4a!important;border:4px solid #0a0820!important;box-shadow:0 0 0 3px #ffcc2e,0 10px 0 6px #0a0820!important;border-radius:6px!important}
+  #coopMenu h2,#coopWin h2{color:#ffcc2e!important;text-align:center;text-shadow:none!important}
+  #coopMenu input,#coopMenu select{background:#0f0b2a!important;color:#fff;border:2px solid #5a4ea0!important;border-radius:4px!important}
+  #coopMenu .tab,#coopMenu .cb,#coopWin button,#coopHud button{border:4px solid #0a0820!important;border-radius:6px!important;font-weight:800!important;color:#fff!important;text-shadow:2px 2px 0 rgba(0,0,0,.45);box-shadow:inset 0 -5px 0 rgba(0,0,0,.28),inset 0 3px 0 rgba(255,255,255,.35),0 5px 0 #0a0820;background:#2f7dff!important}
+  #coopMenu .tab.on{background:#2fae58!important}
+  #coopMenu .go,#coopWin button.go{background:#f5a21c!important;color:#fff!important}
+  #coopMenu .gh{background:#7b8196!important}
+  #coopWin button#cwNew{background:#e8393f!important}
+  #coopMenu .tab:active,#coopMenu .cb:active,#coopWin button:active{transform:translateY(3px)}
+  #coopMenu .ch{border:3px solid #0a0820!important;background:#0f0b2a!important;border-radius:6px!important}#coopMenu .ch.on{border-color:#ffcc2e!important;box-shadow:0 0 0 2px #ffcc2e,0 0 12px #ffcc2e99!important}
+  #coopMenu .chars{max-height:none!important;grid-template-columns:repeat(3,minmax(0,104px))!important;justify-content:center}
+  #coopMenu .ch div{font-size:14px!important;font-weight:700;margin-top:3px}
+  #coopWin .code{background:#0f0b2a!important;border:3px solid #5a4ea0;border-radius:4px!important;color:#ffcc2e!important}
+  #coopWin .pl{background:#0f0b2a!important;border-radius:4px!important}
+  #coopHud .chip,#coopHud .pn{background:#221a4a!important;border:3px solid #0a0820!important;box-shadow:0 0 0 2px #ffcc2e!important;border-radius:6px!important}
   `;
   document.head.appendChild(css);
 
@@ -148,8 +169,8 @@
   }
   function initLobbyButton() {
     const L = $('lobby'); if (!L || $('coopBtn')) return;
-    const b = document.createElement('button'); b.id = 'coopBtn'; b.type = 'button'; b.textContent = '🤝 Co-op เล่นกับเพื่อน';
-    L.appendChild(b);
+    const b = document.createElement('button'); b.id = 'coopBtn'; b.type = 'button'; b.innerHTML = '<span class="ic">🤝</span><span class="tx">Co-op เล่นกับเพื่อน</span>';
+    (L.querySelector('.lz-stage') || L).appendChild(b);
     let menu = null; b.onclick = () => { menu = menu || buildMenu(); menu.classList.add('show'); };
   }
 
