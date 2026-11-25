@@ -116,13 +116,21 @@ function leave(p) {
   if (!room.members.size) { room.empty = Date.now(); room.host = 0; return; }       // keep the room 90 s so the creator can reload the page into the game
   if (room.host === p.id) room.host = room.members.values().next().value.id;      // host leaves: hand over, room survives
   toRoom(room, { t: 'leave', id: p.id, host: room.host });
+  sleepCheck(room);
 }
 function enter(p, room, m) {
   p.room = room; p.name = clean(m.name, 14) || 'ผู้เล่น' + p.id; p.rel = clean(m.rel, 24); p.char = key(m.char, 40);
-  p.scene = 'office'; p.x = 0; p.y = 0; p.s = [0, 0, 0]; p.office = officeOf(room, p);
+  p.sleep = 0; p.scene = 'office'; p.x = 0; p.y = 0; p.s = [0, 0, 0]; p.office = officeOf(room, p);
   room.members.set(p.id, p);
-  p.c.send({ t: 'room', code: room.code, you: p.id, host: room.host, opts: room.opts, money: room.money, quest: room.quest, players: [...room.members.values()].filter(o => o !== p).map(pub) });
+  p.c.send({ t: 'room', code: room.code, you: p.id, host: room.host, opts: room.opts, money: room.money, quest: room.quest, clock: room.clock, biz: room.opts.office === 'shared' ? room.biz : null, players: [...room.members.values()].filter(o => o !== p).map(pub) });
   toRoom(room, { t: 'join', p: pub(p) }, p);
+}
+
+function sleepCheck(room) {                              // everyone must be asleep before the day skips to morning
+  const all = [...room.members.values()]; if (!all.length) return;
+  const z = all.filter(m => m.sleep);
+  if (z.length === all.length && all.length > 0) { all.forEach(m => { m.sleep = 0; }); toRoom(room, { t: 'dawn' }); return; }
+  toRoom(room, { t: 'sleepers', n: z.length, total: all.length, names: z.map(m => m.name), ids: z.map(m => m.id) });
 }
 
 function handle(p, m) {
@@ -134,7 +142,7 @@ function handle(p, m) {
       const o = m.opts || {}, opts = {};
       for (const k in MODES) opts[k] = MODES[k].includes(o[k]) ? o[k] : 'split';
       const code = newCode(); if (!code) return p.c.send({ t: 'err', msg: 'สร้างห้องไม่สำเร็จ' });
-      const room = { code, host: p.id, opts, members: new Map(), money: opts.money === 'shared' ? num(m.money, 0, 1e12, 0) : null, quest: {}, created: now, empty: 0 };
+      const room = { code, host: p.id, opts, members: new Map(), money: opts.money === 'shared' ? num(m.money, 0, 1e12, 0) : null, quest: {}, clock: null, biz: {}, created: now, empty: 0 };
       rooms.set(code, room); enter(p, room, m); break;
     }
     case 'join': {
@@ -180,12 +188,26 @@ function handle(p, m) {
       for (const o of p.room.members.values()) if (o !== p && o.office === p.office && (p.scene !== 'office' ? o.scene === p.scene : true)) o.c.send(ev);
       break;
     }
+    case 'clk': {                                         // host is the room clock; everybody else follows
+      const r = p.room; if (!r || r.host !== p.id) return;
+      const day = num(m.day, 0, 1e6, 0) | 0, tm = num(m.tm, 0, 3000, 0);
+      r.clock = { day, tm }; toRoom(r, { t: 'clk', day, tm }, p); break;
+    }
+    case 'biz': {                                         // shared office: relay one top-level key of the business state
+      const r = p.room; if (!r || r.opts.office !== 'shared') return;
+      const k = key(m.k, 24); if (!k) return;
+      let j; try { j = JSON.stringify(m.v); } catch (e) { return; } if (j === undefined || j.length > 400000) return;
+      r.biz[k] = m.v; toRoom(r, { t: 'biz', k, v: m.v, by: p.id }, p); break;
+    }
+    case 'sleep': {
+      const r = p.room; if (!r) return; p.sleep = m.v ? 1 : 0; sleepCheck(r); break;
+    }
     case 'ping': p.c.send({ t: 'pong', at: m.at }); break;
   }
 }
 
 function onConnect(c) {
-  const p = { id: nextId++, c, room: null, name: '', rel: '', char: '', scene: 'office', x: 0, y: 0, s: [0, 0, 0], office: '', last: Date.now(), chatT: 0, evT: 0 };
+  const p = { id: nextId++, c, room: null, name: '', rel: '', char: '', scene: 'office', x: 0, y: 0, s: [0, 0, 0], office: '', last: Date.now(), chatT: 0, evT: 0, sleep: 0 };
   players.set(p.id, p);
   c.onclose = () => { players.delete(p.id); leave(p); };
   c.onmsg = s => {

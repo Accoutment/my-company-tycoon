@@ -165,8 +165,10 @@
   function applyRoom(m) {
     Co.you = m.you; Co.host = m.host; Co.code = m.code; Co.opts = m.opts; Co.others.clear();
     m.players.forEach(upsert);
-    try { S.ceo = BOOT.name; } catch (e) { }
-    try { if (BOOT.rel && BOOT.rel !== 'none' && window.REL) { if (S.rg && !S.rg.religionId) { S.rg.religionId = BOOT.rel; } } } catch (e) { }
+    try { if (!S.coopInit) { S.coopInit = 1; S.ceo = BOOT.name; if (BOOT.rel && BOOT.rel !== 'none' && window.REL && S.rg && !S.rg.religionId) S.rg.religionId = BOOT.rel; } else if (!S.ceo) S.ceo = BOOT.name; } catch (e) { }
+    Co.sleepN = 0; Co.sleepTot = m.players.length + 1; Co.sleepNames = [];
+    if (m.clock && Co.host !== Co.you) applyClock(m.clock, true);
+    if (m.biz && m.opts.office === 'shared' && Co.host !== Co.you) { for (const k in m.biz) applyBiz(k, m.biz[k]); }
     if (m.opts.money === 'shared' && m.money != null) { try { S.money = m.money; } catch (e) { } }
     Co.prevMoney = (typeof S !== 'undefined') ? S.money : 0;
     if (m.opts.quest === 'shared') { QKEYS.forEach(k => { const t = (m.quest || {})[k]; if (t && S.q) { S.q[k] = S.q[k] || {}; for (const id in t) S.q[k][id] = t[id]; } }); }
@@ -180,7 +182,7 @@
   function onMsg(m) {
     switch (m.t) {
       case 'room': applyRoom(m); break;
-      case 'join': upsert(m.p); toast(m.p.name + ' เข้าห้อง'); renderHud(); break;
+      case 'join': upsert(m.p); Co.sleepTot = Co.others.size + 1; toast(m.p.name + ' เข้าห้อง'); renderHud(); break;
       case 'leave': { const o = Co.others.get(m.id); Co.others.delete(m.id); Co.host = m.host; if (o) toast(o.name + ' ออกจากห้อง'); renderHud(); break; }
       case 'snap': {
         const seen = new Set();
@@ -200,10 +202,72 @@
       case 'quest': if (m.by !== Co.you && Co.opts && Co.opts.quest === 'shared') {
         try { S.q[m.k] = S.q[m.k] || {}; if (m.v === null) delete S.q[m.k][m.id]; else S.q[m.k][m.id] = m.v; (Co.prevQ[m.k] = Co.prevQ[m.k] || {})[m.id] = m.v === null ? undefined : JSON.stringify(m.v); } catch (e) { }
       } break;
+      case 'clk': applyClock(m, false); break;
+      case 'biz': if (Co.opts && Co.opts.office === 'shared') applyBiz(m.k, m.v); break;
+      case 'sleepers': Co.sleepN = m.n; Co.sleepTot = m.total; Co.sleepNames = m.names || []; if (m.ids && m.ids.length && !m.ids.includes(Co.you)) toast('🛏️ ' + (m.names || []).join(', ') + ' เข้านอน (' + m.n + '/' + m.total + ') · ต้องนอนครบทุกคนถึงจะเช้า'); renderHud(); break;
+      case 'dawn': Co.dawn = 1; Co.sleepN = 0; Co.sleepNames = []; Co.sleeping = false; renderHud(); break;
       case 'ev': { const h = Co.evh[m.k]; if (h) try { h(m.d, m); } catch (e) { } break; }
       case 'err': toast(m.msg || 'Co-op error'); break;
     }
   }
+
+  /* ---------------------------------------------------------------- clock / business / sleep sync */
+  const BIZ_SKIP = { name: 1, money: 1, day: 1, t: 1, speed: 1, paused: 1, dl: 1, rg: 1, ceoRPG: 1, q: 1, ceo: 1, coopInit: 1, over: 1 };
+  Co.bizLast = {};
+  Co.isFollower = () => !!(Co.on && Co.opts && Co.opts.office === 'shared' && Co.host && Co.host !== Co.you);
+  function applyClock(c, force) {
+    try {
+      if (typeof S === 'undefined' || !S) return;
+      const f = Co.isFollower();
+      if (S.day !== c.day) { if (f || force) { S.day = c.day; S.t = c.tm; try { if (typeof z === 'function') S.today = z(); } catch (e) { } } }
+      else if (f || force || Math.abs(S.t - c.tm) >= 2) S.t = c.tm;
+    } catch (e) { }
+  }
+  function applyBiz(k, v) {
+    try { if (BIZ_SKIP[k] || typeof S === 'undefined') return; S[k] = v; Co.bizLast[k] = JSON.stringify(v); } catch (e) { }
+  }
+  setInterval(() => {                                               // 1) host = นาฬิกาห้อง  2) ออฟฟิศรวม: ธุรกิจจากโฮสต์ → ทุกคน, การกระทำของคนอื่น → ส่งกลับ
+    if (!Co.on || typeof S === 'undefined' || !S) return;
+    if (Co.host === Co.you) send({ t: 'clk', day: S.day, tm: Math.round(S.t * 10) / 10 });
+    if (Co.opts && Co.opts.office === 'shared') {
+      if (Co.isFollower()) { try { S.paused = 1; } catch (e) { } }    // ผู้ตามไม่จำลองธุรกิจเอง ใช้ของโฮสต์
+      const base = Co.isFollower() && !Co.bizInit; if (base) Co.bizInit = 1;
+      for (const k in S) {
+        if (BIZ_SKIP[k]) continue;
+        let j; try { j = JSON.stringify(S[k]); } catch (e) { continue; }
+        if (j === undefined || j === Co.bizLast[k]) continue;
+        if (base) { Co.bizLast[k] = j; continue; }
+        if (j.length > 380000) continue;
+        Co.bizLast[k] = j; send({ t: 'biz', k, v: S[k] });
+      }
+    }
+  }, 1000);
+  Co.sleepGate = function (z, ti) {                                 // เรียกจากแกนเกมตอนนอน: true = ข้ามไปเช้าได้
+    Co.sleepTot = Co.others.size + 1;
+    if (!Co.on || Co.sleepTot <= 1) { return true; }
+    if (Co.dawn) { Co.dawn = 0; Co.sleeping = false; return true; }
+    if (Co.wake) { Co.wake = 0; Co.sleeping = false; send({ t: 'sleep', v: 0 }); try { const st = window.__CEO_CTX.st; st.sleep = null; st.keys = {}; st.x = z.fx; st.y = z.fy; } catch (e) { } return false; }
+    if (!Co.sleeping) { Co.sleeping = true; send({ t: 'sleep', v: 1 }); renderHud(); }
+    try { if (ti) ti.textContent = '😴 นอนรอเพื่อน (' + Co.sleepN + '/' + Co.sleepTot + ') · ต้องนอนครบทุกคนถึงจะเช้า'; } catch (e) { }
+    return false;
+  };
+  setInterval(() => { try { if (Co.sleeping && !window.__CEO_CTX.st.sleep) { Co.sleeping = false; send({ t: 'sleep', v: 0 }); renderHud(); } } catch (e) { } }, 500);
+
+  /* ---------------------------------------------------------------- own avatar = chosen character */
+  function buildAvatar() {
+    try {
+      const pack = CHAR_IMAGES[BOOT.char]; if (!pack) return true;
+      const rows = pack.frames; if (!rows || rows.length < 4) return true;
+      for (const r of rows) for (const im of r) if (!(im.complete && im.naturalWidth)) return false;
+      const W = 1536, H = 480, cw = W / 16, ch = H / 4, cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+      const g = cv.getContext('2d'); g.imageSmoothingEnabled = false;
+      for (let r = 0; r < 4; r++) { const fr = rows[[0, 2, 1, 3][r]]; for (let c = 0; c < 16; c++) { const f = fr[c === 0 ? 0 : (c - 1) % Math.min(4, fr.length)]; const sc = Math.min(cw / f.naturalWidth, ch / f.naturalHeight); g.drawImage(f, c * cw + (cw - f.naturalWidth * sc) / 2, r * ch + (ch - f.naturalHeight * sc), f.naturalWidth * sc, f.naturalHeight * sc); } }
+      cv.complete = true; cv.naturalWidth = W; cv.naturalHeight = H;
+      CEOI = cv; return true;
+    } catch (e) { console.warn('[coop avatar]', e); return true; }
+  }
+  { let tries = 0; const iv = setInterval(() => { if (buildAvatar() || ++tries > 60) clearInterval(iv); }, 1000); }
+
   function connect() {
     const url = BOOT.url || serverUrl();
     try { Co.ws = new WebSocket(url); } catch (e) { toast('Co-op: เชื่อมต่อไม่ได้'); return; }
@@ -251,6 +315,7 @@
     hud.className = hudOpen ? 'open' : '';
     hud.innerHTML = `<div class="chip" id="cpChip">🤝 <i>${esc(Co.code)}</i> · ${Co.others.size + 1} คน ${Co.on ? '' : '⚠️'}</div>
       <div class="pn">${rows.join('')}
+      ${Co.sleepNames && Co.sleepNames.length ? `<div class="opts">🛏️ นอนแล้ว ${Co.sleepN}/${Co.sleepTot}: ${esc(Co.sleepNames.join(', '))}</div>` : ''}${Co.sleeping ? '<button id="cpWake">⏰ ตื่นก่อน</button>' : ''}
       <div class="opts">💰 เงิน${MODE_TH[o.money] || ''} · 🏢 ออฟฟิศ${MODE_TH[o.office] || ''} · 📜 เควสต์${MODE_TH[o.quest] || ''}</div>
       <div class="chat" id="cpLog">${Co.chat.slice(-8).map(esc).join('<br>')}</div>
       <input id="cpSay" maxlength="120" placeholder="พิมพ์แล้วกด Enter" autocomplete="off">
@@ -258,6 +323,7 @@
     hud.querySelector('#cpChip').onclick = () => { hudOpen = !hudOpen; renderHud(); };
     const inp = hud.querySelector('#cpSay'); inp.value = val; if (keepIn) inp.focus();
     inp.onkeydown = e => { e.stopPropagation(); if (e.key === 'Enter' && inp.value.trim()) { send({ t: 'chat', text: inp.value.trim() }); inp.value = ''; } };
+    const wk = hud.querySelector('#cpWake'); if (wk) wk.onclick = () => { Co.wake = 1; };
     hud.querySelector('#cpCopy').onclick = () => { try { navigator.clipboard.writeText(Co.code); toast('คัดลอกรหัสห้องแล้ว'); } catch (e) { toast('รหัสห้อง ' + Co.code); } };
     hud.querySelector('#cpLeave').onclick = () => { if (confirm('ออกจากห้อง Co-op และกลับหน้าเมนู?')) leaveCoop(); };
     const lg = hud.querySelector('#cpLog'); if (lg) lg.scrollTop = 1e6;

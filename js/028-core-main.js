@@ -3555,7 +3555,7 @@ function drawStreet(g,t,preview=false){
   else{st.keys={};st.moving=0}
   const k=Math.min(1,Math.max(0,(z.t-2.0)/2.8));
   if(z.t>=2.0&&z.t<5.4)ti.textContent='😴 กำลังนอนหลับ… 🕒 '+fmtT(z.s0+(z.tgt-z.s0)*k);
-  if(z.t>=3.4&&!z.done){z.done=1;try{if(S.t<360){S.t=360}else{S.t=1440;endDay();S.t=360}hud();save(1)}catch(e){S.t=360}}
+  if(z.t>=3.4&&!z.done){if(window.COOP&&COOP.sleepGate&&!COOP.sleepGate(z,ti)){z.t=3.3;return}z.done=1;try{if(window.COOP&&COOP.isFollower&&COOP.isFollower()){S.t=360}else if(S.t<360){S.t=360}else{S.t=1440;endDay();S.t=360}hud();save(1)}catch(e){S.t=360}}
   if(z.t>=5.4)st.dawn=Math.min(1,(z.t-5.4)/1.2);
   if(z.t>=5.4&&z.t<5.5)ti.textContent='🌅 ตื่นแล้ว 06:00 · วันใหม่เริ่มต้น';
   if(z.t>=7.6){st.sleep=null;st.keys={};st.x=BED.x;st.y=BED.y+14;st.dir=0;toast('☀️ ตื่นนอน 06:00 น. วันที่ '+S.day+' · พักผ่อนเต็มที่');ti.textContent='เวลาในเกม '+sceneClockText()+seasonTag()}
