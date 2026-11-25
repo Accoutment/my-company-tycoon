@@ -1,0 +1,1 @@
+window.MCT_INTRO_ASSETS={bg:'assets/img/564890d5335b.jpg',logo:'assets/img/8c6f2f6c28ef.png',tree:'assets/img/6990142c39b4.png',bush:'assets/img/9340e7bab7e3.png',plant:'assets/img/d439c5784b96.png'};

@@ -1,0 +1,15 @@
+/* v154 · มือถือ: ปุ่มเควส/มือถือ ไม่ทับปุ่มโต้ตอบ · แผงเวลา/ฤดูกาลย่อ · ฉากเลือกปลายทางไม่บังรถ */
+@media (max-height:560px){
+:root{--mctW:min(150px,calc((100vh - 84px)*.45))}
+#qTrack{top:calc(58px + env(safe-area-inset-top,0px))!important}
+#ceoScene.busPick #ceoSceneChoices{align-items:flex-start!important;padding-top:calc(52px + env(safe-area-inset-top,0px))!important;background:transparent!important;pointer-events:none}
+#ceoScene.busPick #ceoSceneChoicePanel{pointer-events:auto;padding:8px 14px!important;max-height:none!important}
+#ceoScene.busPick #ceoSceneChoicePanel h2{font-size:16px!important;margin:0 0 2px!important}
+#ceoScene.busPick #ceoSceneChoicePanel p{font-size:12px!important;margin:0 0 6px!important}
+#ceoScene.busPick #ceoDestPreview,#ceoScene.busPick .lvImg,#ceoScene.busPick .lvBadge,#ceoScene.busPick .lvRent{display:none!important}
+#ceoScene.busPick .lvChip{padding:4px 6px!important}
+#ceoScene.busPick .ceoDest{min-height:0!important;padding:6px 12px!important}
+}
+body.mctDock #qFab{top:auto!important;bottom:var(--dkB)!important;right:var(--dkR1)!important;width:var(--dkS)!important;height:var(--dkS)!important}
+body.mctDock #phnBtn{top:auto!important;bottom:var(--dkB)!important;right:var(--dkR2)!important;width:var(--dkS)!important;height:var(--dkS)!important}
+body:has(#ceoScene.busPick) #qTrack{display:none!important}

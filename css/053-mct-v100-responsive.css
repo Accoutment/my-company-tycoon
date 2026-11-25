@@ -1,0 +1,294 @@
+
+/* =====================================================================
+   v100 · RESPONSIVE UI LAYER  (Desktop / Tablet / Mobile / Small Mobile)
+   เลเยอร์นี้ "ทับ" CSS เดิมเท่านั้น ไม่แตะ logic เกม ไม่ลบ animation/effect เดิม
+   Desktop (จอกว้าง+เมาส์) = รูปแบบเดิมทุกอย่าง
+   ===================================================================== */
+:root{
+  --vvh:100dvh;--vvt:0px;            /* ถูกอัปเดตโดย JS ตาม visualViewport (คีย์บอร์ด) */
+  --st:env(safe-area-inset-top,0px);--sb2:env(safe-area-inset-bottom,0px);
+  --sl2:env(safe-area-inset-left,0px);--sr2:env(safe-area-inset-right,0px);
+  --tap:44px;
+}
+@supports (height:100dvh){html,body{height:100dvh}}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+/* ตอบสนองการแตะทันที ไม่มีดีเลย์ double-tap-zoom (ไม่กระทบ joystick/ปุ่มกด ที่ตั้ง touch-action:none ไว้แล้ว) */
+:where(button,.btn,select,summary,label,[role=button],[onclick],input){touch-action:manipulation}
+:where(.act,#joy,#joyBase,canvas){touch-action:none}
+/* toast / ป้ายข้อความ ต้องไม่บังพื้นที่กด */
+#toast,#rpLvl,#mctHud .fr,#mctHud .mdelta{pointer-events:none!important}
+
+/* ---------- แถบข้อมูลวัน/เวลา/เงิน (mctHud): JS เดิมวางตามขอบ "แคนวาสโลก" ซึ่งกว้างกว่าจอบนมือถือแนวตั้ง
+   ทำให้แถบหลุดออกนอกจอ → ตรึงไว้ชิดขอบขวาของ viewport (บนเดสก์ท็อปตำแหน่งเท่าเดิม) ---------- */
+#mctHud{left:auto!important;right:max(8px,var(--sr2))!important}
+
+@media (pointer:coarse),(max-width:1024px),(max-height:560px){
+/* ---------- ทุก Popup: ห้ามล้นจอ / เลื่อนภายในได้ / ปุ่มปิดต้องเห็นเสมอ ---------- */
+.clientDialog,.testPanel,.bagPanel,.rpPanel,.rwPanel,.osWin,.loanDlg,.calPhone,.calBook,
+#ceoSceneChoicePanel,#policeModal>*,#spyModal>*{max-width:100%;overscroll-behavior:contain}
+.clientDialog,.testPanel,.bagPanel,.rwPanel,.loanDlg,#ceoSceneChoicePanel{
+  max-height:calc(var(--vvh) - 12px - var(--st) - var(--sb2));overflow-y:auto;-webkit-overflow-scrolling:touch}
+.mBody,.rpMain #rpView,#rpView,.osDesk,.shBody,.hrWin .osBody,#pn,.evMessage,.mct-message{-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+#clientModal,#loanModal,#testModal,#evModal,#ceoBag,#ceoProf,#ceoWork,#menu,#calModal,.os{
+  padding-left:max(var(--sl2),6px);padding-right:max(var(--sr2),6px)}
+.os .osBar{padding-left:max(10px,var(--sl2));padding-right:max(10px,var(--sr2))}
+/* ปุ่มปิดของแต่ละหน้าต่างค้างอยู่บนสุดของกล่อง (sticky) เมื่อเลื่อนเนื้อหา */
+.bagHead,.osTitle,.rpHead{position:sticky;top:0;z-index:5}
+.bagHead{background:inherit}
+
+}
+
+/* ---------- แบนเนอร์ "หมุนจอ" : ห้ามบังหน้าต่าง/ปุ่มปิดใด ๆ ---------- */
+#rotateMsg{z-index:21!important;pointer-events:none;
+  top:calc(var(--st) + var(--hud,34px) + 156px)!important;left:max(8px,var(--sl2))!important;right:max(8px,var(--sr2))!important;
+  padding:6px 8px!important;animation:mctRotFade 9s ease forwards}
+#rotateMsg .btn{pointer-events:auto}
+#rotateMsg>div{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:4px 8px}
+#rotateMsg h2{width:100%;font-size:14px!important;line-height:1.25}
+#rotateMsg p{width:100%;font-size:12px!important;margin:0!important}
+@keyframes mctRotFade{0%,82%{opacity:1}100%{opacity:0;visibility:hidden}}
+
+/* =====================================================================
+   อุปกรณ์สัมผัส / จอเล็ก / จอเตี้ย  (Tablet · Mobile · Small Mobile)
+   ===================================================================== */
+@media (pointer:coarse),(max-width:1024px),(max-height:560px){
+  *,*::before,*::after{box-sizing:border-box}   /* เฉพาะอุปกรณ์สัมผัส/จอเล็ก: เดสก์ท็อปคงสัดส่วนเดิม */
+  :root{--hud:44px;--mctTop:52px}
+
+  /* --- พื้นที่สัมผัส ≥ 44×44 --- */
+  button,.btn,select,[role=button],.osIco,.mct-btn,.evAction,.rpX,.calNav,.calTab,.calX,.calBtn2,#rpTabs button,.mCat,.mClose,.hrTabs .btn{
+    min-height:var(--tap)}
+  button:not(.hb):not(.act):not(.mct-btn):not(.mct-input):not(.osIco):not(.lz-bl):not(.lz-pu):not(.lz-gr):not(.lz-re):not(.lz-y),
+  .btn,.rpX,.calNav,.calTab,.calX,.calBtn2{min-width:var(--tap)}
+  input:not([type=range]):not([type=checkbox]):not([type=radio]),select,textarea{min-height:var(--tap);font-size:max(16px,1em)} /* 16px = iOS ไม่ซูมเองเมื่อโฟกัสช่องกรอก */
+  input[type=range]{min-height:var(--tap);touch-action:pan-x}
+  input[type=checkbox],input[type=radio]{width:26px;height:26px;flex:none}
+  label:has(>input[type=checkbox]),label:has(>input[type=radio]){min-height:var(--tap);align-items:center}
+  .btn{padding-top:max(6px,var(--btn-py,6px));padding-bottom:max(6px,var(--btn-py,6px))}
+  /* ระยะห่างระหว่างปุ่มไม่ให้ชิดกันเกินไป */
+  .sh,.osRow,.evActions,.clientActions,.hrTabs{gap:8px}
+
+  /* --- แถบบน (HUD) : เมนู/ปฏิทิน/เลเวลต้องอยู่ในจอ+กดได้ --- */
+  #top{height:var(--hud);padding-left:max(8px,var(--sl2));padding-right:max(8px,var(--sr2));gap:6px;z-index:22}
+  #top .hudL{min-width:0;flex:1 1 auto;overflow:hidden;gap:6px}
+  #top .hudL #tn{min-width:0;max-width:34vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #top .hudL #tl{display:none}
+  #top .hudR{flex:none;gap:6px}
+  #top .btn,#top #menuBtn,#rpChip{min-height:var(--tap);margin:0}
+  #rpChip{min-width:var(--tap);min-height:var(--tap);padding:3px 10px;font-size:13px;border-radius:14px}
+  #spdTag{padding:6px 8px;font-size:12px}
+  #calBtn{padding:2px 6px;width:44px;height:var(--tap);position:relative}
+  #calBtn .calIcoImg{width:30px;height:30px;object-fit:contain;display:block;margin:auto}
+  #top #menuBtn{padding:3px 12px;min-width:44px}
+  /* ปุ่มซ่อน/แสดงแถบข้อมูลด้านขวา */
+  #mctHud.sceneMode #mctHudTab,#mctHudTab{right:auto!important;width:44px!important;height:44px!important;left:-48px!important;top:0!important;font-size:20px!important;border-radius:10px 0 0 10px!important;display:flex;align-items:center;justify-content:center}
+
+  /* --- จอยสติ๊ก / ปุ่มกระทำ ให้อยู่ใน Safe Area เสมอ --- */
+  #joy{left:calc(14px + var(--sl2));bottom:calc(14px + var(--sb2))}
+  #acts{right:calc(14px + var(--sr2));bottom:calc(14px + var(--sb2))}
+  .act.sm{min-width:56px;min-height:56px}
+  .act.big{min-width:72px;min-height:72px}
+
+  /* --- เมนูหลัก (โค้ดเดิมใช้ !important จึงต้องใช้ #menu + !important เท่ากัน แล้วอาศัยลำดับท้ายไฟล์) --- */
+  #menu{padding-top:calc(6px + var(--st))!important;padding-bottom:calc(6px + var(--sb2))!important;padding-left:max(var(--sl2),4px)!important;padding-right:max(var(--sr2),4px)!important;height:var(--vvh);top:var(--vvt);bottom:auto}
+  #menu .mCat{min-height:var(--tap)!important}
+  #menu .mClose{min-height:var(--tap)!important}
+  #menu #mSub .btn{min-height:var(--tap)!important}
+  #menu #mSub{min-height:var(--tap)!important}
+  #menu .mReturnTitle{min-height:var(--tap)!important}
+  #menu .c .btn,#menu .sh .btn{min-height:var(--tap)!important;margin:0}
+  #menu .mBody{padding:10px 12px}
+  /* --- Modal ทั่วไป: ใช้ความสูงจาก visualViewport --- */
+  #clientModal,#loanModal,#testModal,#evModal,#ceoBag,#ceoProf,#ceoWork,#calModal,#ceoSceneChoices{
+    height:var(--vvh);top:var(--vvt);bottom:auto;
+    padding-top:max(var(--st),6px);padding-bottom:max(var(--sb2),6px)}
+  #clientModal,#loanModal{align-items:flex-start;overflow:auto}
+  .clientDialog,.loanDlg{margin:auto}
+  .os{height:var(--vvh);top:var(--vvt);bottom:auto;padding-top:var(--st)}
+  .osDesk{padding:12px;gap:10px;justify-content:center}
+  .osWin{width:min(440px,100%)}
+  .osWin.shopWin,.osWin.hrWin{width:100%}
+  .osWin .osBody{max-height:calc(var(--vvh) - 110px - var(--st) - var(--sb2));overflow:auto}
+  .osWin .osTitle .btn{min-width:44px;padding:0 10px}
+
+  /* --- CEO Profile / CEO Work --- */
+  #ceoProf{padding:max(var(--st),4px) max(var(--sr2),4px) max(var(--sb2),4px) max(var(--sl2),4px)}
+  .rpPanel{height:100%;max-height:100%;border-radius:10px}
+  .rpHead{gap:8px;padding:6px 10px}
+  .rpX{width:44px;height:44px}
+  #rpTabs{padding-top:6px}
+  #rpTabs button{min-height:44px;border-radius:8px}
+  .rpBody{flex-wrap:nowrap}
+  #rpView{overflow:auto;min-height:0}
+  .rwPanel{max-height:calc(var(--vvh) - 12px - var(--st) - var(--sb2))}
+  .rwPad button{min-height:44px;height:auto}
+
+  /* --- กระเป๋า --- */
+  #ceoBag .bagPanel{width:min(640px,100%)}
+  .bagGrid{gap:6px}
+
+  /* --- ปฏิทิน --- */
+  #calModal{align-items:center}
+  .calNav{width:44px;height:44px}
+  .calX{min-width:56px}
+
+  /* --- Developer test --- */
+  .testPanel .btn{min-height:44px}
+
+  /* --- ป๊อปอัปกรอบภาพ (event / confirm) --- */
+  .evAction{min-height:44px;font-size:13px}
+  #mctGameDialog{padding:max(10px,var(--st)) max(10px,var(--sr2)) max(10px,var(--sb2)) max(10px,var(--sl2));height:var(--vvh);top:var(--vvt);bottom:auto}
+  #mctGameDialog .mct-btn{min-height:44px}
+  #mctGameDialog .mct-input{min-height:44px;font-size:16px!important}
+}
+
+/* ---------- มือถือแนวตั้ง (Mobile Portrait) ---------- */
+@media (max-width:640px) and (orientation:portrait){
+  #toast{left:12px!important;right:12px!important}
+  /* เมนู: แท็บหมวดอยู่แนวนอนด้านบน เนื้อหาเต็มความกว้าง */
+  #menu .mPanel{flex-direction:column!important;width:100%!important;max-height:none!important;height:100%!important;aspect-ratio:auto!important;border-radius:12px!important}
+  /* แถบหมวด (เลื่อนแนวนอนได้) + ปุ่มปิดคงที่ด้านขวา แยกคอลัมน์ ไม่ซ้อนทับกัน */
+  #menu .mSide{flex:none!important;width:auto!important;min-width:0!important;display:grid!important;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px!important;padding:8px!important;overflow:visible!important;border-right:0!important;border-bottom:1px solid #303b50!important}
+  #menu #mCats{display:flex!important;flex-direction:row!important;gap:6px!important;min-width:0;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;grid-column:1}
+  #menu #mCats::-webkit-scrollbar{display:none}
+  #menu .mCat{width:auto!important;flex:none!important;white-space:nowrap;padding:6px 12px!important;font-size:13px!important;border-left:0!important}
+  #menu .mCat.on{border-bottom:3px solid #e0a82e!important;border-left:0!important;padding-left:12px!important}
+  #menu .mCat .mIc{font-size:18px!important}
+  #menu #mCats.mMoreR{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 30px),transparent)}
+  #menu #mCats.mMoreL{-webkit-mask-image:linear-gradient(270deg,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(270deg,#000 calc(100% - 30px),transparent)}
+  #menu #mCats.mMoreR.mMoreL{-webkit-mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 30px),transparent);mask-image:linear-gradient(90deg,transparent,#000 30px,#000 calc(100% - 30px),transparent)}
+  #menu .mTitle{display:none!important}
+  #menu .mClose{margin:0!important;grid-column:2;padding:6px 12px!important;white-space:nowrap}
+  #menu .mBody{flex:1 1 auto!important;min-height:0!important;padding:10px!important}
+  #menu #mSub{flex-wrap:nowrap!important;overflow-x:auto;padding-bottom:2px!important;scrollbar-width:none;gap:6px!important}
+  #menu #mSub .btn{flex:none;white-space:nowrap;font-size:13px!important;padding:6px 12px!important}
+  /* พื้นที่เล่นเกม: บนจอแนวตั้ง จอยสติ๊กเล็กลงเล็กน้อยเพื่อไม่บังฉาก */
+  :root{--js:clamp(104px,26vw,136px)}
+  .act.big{width:clamp(72px,22vw,88px);height:clamp(72px,22vw,88px)}
+  .act.sm,.act.sm.bagIconAct,.act.sm.pcIconAct{width:clamp(56px,17vw,68px);height:clamp(56px,17vw,68px)}
+  /* ป๊อปอัปกรอบภาพ: ขยายความสูงให้ตัวหนังสือ/ปุ่มมีที่พอ */
+  .evFrame{aspect-ratio:auto!important;width:min(96vw,460px)!important;height:min(78vh,calc(var(--vvh) - 24px),520px);max-height:none!important}
+  .evContent{left:12%!important;right:12%!important;top:19%!important;bottom:19%!important}
+  .evTitle{font-size:clamp(15px,4.4vw,19px)!important}
+  .evMessage{font-size:clamp(12px,3.4vw,15px)!important;line-height:1.5!important}
+  #mctGameDialog .mct-panel{width:min(98vw,460px)!important;aspect-ratio:auto!important;height:min(380px,calc(var(--vvh) - 24px))}
+  #mctGameDialog .mct-top{left:12%;right:12%;top:20%}
+  #mctGameDialog .mct-title{font-size:clamp(14px,4.2vw,17px)!important}
+  #mctGameDialog .mct-icon{width:34px;height:34px}
+  #mctGameDialog .mct-message{left:13%;right:13%;top:34%;max-height:33%;font-size:clamp(12px,3.4vw,14px)!important;line-height:1.5}
+  #mctGameDialog .mct-input{left:14%;width:72%;top:64%}
+  #mctGameDialog .mct-actions{left:14%;right:14%;bottom:10%;height:auto;min-height:48px;gap:10px}
+  #mctGameDialog .mct-btn{font-size:clamp(13px,3.6vw,15px)!important}
+  /* ปฏิทิน / ตาราง */
+  .calCell{min-height:52px}
+}
+
+/* ---------- ปฏิทิน: ลดขอบบนจอแคบเพื่อให้ช่องวันที่แตะได้ ≥44px ---------- */
+@media (max-width:400px){
+  #calModal{padding-left:2px!important;padding-right:2px!important}
+  .calWin{border-width:3px;padding:6px 4px 8px}
+  .calGrid{border-width:2px;gap:1px}
+  .calCell{padding:2px}
+}
+@media (max-width:340px){
+  #calModal{padding-left:0!important;padding-right:0!important}
+  .calWin{border-width:2px;padding:6px 0 8px;border-radius:0}
+  .calGrid{border-width:0;border-radius:0;gap:1px}
+  .calTop{padding:0 4px}.calHead{padding:0 2px}
+}
+
+/* ---------- มือถือจอเล็กมาก (iPhone SE 320/375 · เครื่องเตี้ย) ---------- */
+@media (max-width:420px) and (orientation:portrait){
+  /* ปุ่มปิดเมนู → ไอคอน ✕ ขนาด 44×44 เพื่อให้แถบหมวดมีที่มากขึ้น */
+  #menu .mClose{font-size:0!important;width:var(--tap);padding:0!important;display:flex;align-items:center;justify-content:center}
+  #menu .mClose::before{content:'✕';font-size:20px;line-height:1;font-weight:700}
+}
+@media (max-width:380px){
+  #top .hudL #tn{max-width:26vw;font-size:13px}
+  #spdTag{padding:6px 6px}
+  #rpChip{padding:3px 6px;font-size:12px}
+  #top #menuBtn{padding:3px 8px;font-size:13px}
+  .mCat{padding:6px 10px;font-size:13px}
+  .clientHead img{width:64px;height:74px}
+  .clientDialog{padding:10px}
+  #ceoProf .rpHead h2{font-size:16px}
+  .osIco{width:84px}
+}
+
+/* ---------- มือถือแนวนอน (Mobile Landscape) ---------- */
+@media (max-height:560px) and (orientation:landscape){
+  /* Popup ไม่บังพื้นที่ทั้งหมด + เลื่อนภายในได้ */
+  .clientDialog,.testPanel,.rwPanel,.loanDlg{max-height:calc(var(--vvh) - 8px - var(--st) - var(--sb2))}
+  #menu .mPanel{height:100%!important;max-height:none!important;width:min(1100px,100%)!important}
+  #menu .mSide{flex:0 0 26%!important;width:26%!important;min-width:130px!important;max-width:210px!important;padding:8px 6px!important;gap:4px!important}
+  #menu .mCat{padding:6px 8px!important;font-size:13px!important}
+  #menu .mBody{padding:8px 10px!important}
+  .evFrame{width:min(94vw,calc((var(--vvh) - 16px) * 2));max-height:none}
+  .evContent{top:14%!important;bottom:15%!important}
+  .evMessage{font-size:12px!important;line-height:1.35!important}
+  .evTitle{font-size:14px!important;margin-bottom:3px!important}
+  #mctGameDialog .mct-panel{width:min(94vw,calc((var(--vvh) - 16px) * 1.78))}
+  #rotateMsg{display:none!important}
+  .osWin .osBody{max-height:calc(var(--vvh) - 80px - var(--st))}
+  #ceoSceneChoicePanel{max-height:calc(var(--vvh) - 12px)}
+}
+
+/* ---------- แท็บเล็ต (แนวตั้ง) ---------- */
+@media (min-width:641px) and (max-width:1024px) and (orientation:portrait){
+  #menu .mPanel{width:min(94vw,820px)!important;height:min(88%,860px)!important}
+  .evFrame{width:min(90vw,760px)}
+}
+
+/* =====================================================================
+   LOBBY / หน้าแรก : ปุ่มเมนูต้องใหญ่พอกดได้ (hotspot บนภาพ)
+   จอแคบ/เตี้ย → ซูมภาพให้ "คอลัมน์ปุ่ม" เต็มจอ แทนการย่อทั้งภาพ
+   ===================================================================== */
+@media (max-aspect-ratio:16/10) and (max-width:1100px),(max-height:450px){
+  #lobby .lz-stage{
+    --sh:max(var(--vvh),450px);--ty:50%;
+    height:var(--sh);width:calc(var(--sh)*1672/941);aspect-ratio:auto;
+    left:50%;top:50%;transform:translate(-51%,calc(-1*var(--ty)))}
+}
+@media (max-height:450px){#lobby .lz-stage{--ty:57%}}
+@media (pointer:coarse),(max-width:1024px),(max-height:560px){
+#lobby .hb{min-height:44px;min-width:44px}
+#lobby .lz-ov{padding:max(10px,var(--st)) max(10px,var(--sr2)) max(10px,var(--sb2)) max(10px,var(--sl2));overflow:auto;height:var(--vvh);top:var(--vvt);bottom:auto}
+#lobby .lz-panel{max-height:calc(var(--vvh) - 20px - var(--st) - var(--sb2));overflow-y:auto;-webkit-overflow-scrolling:touch;margin:auto}
+}
+@media (max-width:480px),(max-height:450px){
+  #lobby .lz-panel{padding:14px 14px;width:min(440px,94vw)}
+  #lobby .lz-panel h2{font-size:20px}
+  #lobby .lz-panel .lb,#lobby .lz-panel select,#lobby .lz-panel input[type=text]{min-height:44px}
+  #lobby .lz-panel label,#lobby .lz-row{min-height:44px}
+  #lobby .lz-row{flex-wrap:wrap}
+}
+#lobby .lz-ui,#lobby .lz-panel{-webkit-overflow-scrolling:touch}
+
+/* =====================================================================
+   ฉากคอนโด / ทะเล / ฉากเลือกปลายทาง (ปุ่มกลับบริษัท ต้องกดได้)
+   ===================================================================== */
+@media (pointer:coarse),(max-width:1024px),(max-height:560px){
+  #ceoSceneHead .btn{min-height:44px!important;min-width:44px;left:max(10px,var(--sl2))!important;top:calc(10px + var(--st))!important}
+  #ceoSceneChoices .ceoDest{min-height:56px}
+  .ceoDestGrid{gap:10px}
+  #ceoSceneChoicePanel{max-width:calc(100% - 16px)}
+}
+
+/* =====================================================================
+   เมื่อคีย์บอร์ดเปิด (visualViewport หดตัว): ให้ Modal อยู่เหนือคีย์บอร์ด
+   ===================================================================== */
+html.kbOpen #joy,html.kbOpen #acts{display:none!important}
+html.kbOpen .clientDialog,html.kbOpen .testPanel,html.kbOpen .loanDlg{max-height:calc(var(--vvh) - 8px)}
+
+/* =====================================================================
+   Desktop (เมาส์ + จอกว้าง): คงรูปแบบเดิม — จัดการเฉพาะเหตุการณ์ hover → เพิ่ม :focus-visible ให้ใช้คีย์บอร์ดได้
+   ===================================================================== */
+@media (hover:none){
+  /* อุปกรณ์สัมผัส: ไม่ให้สถานะ :hover ค้างหลังแตะ (ทำให้ปุ่มดูเหมือนกดไม่ติด) */
+  #lobby .lb:hover,#lobby .hb:hover{transform:none;filter:none}
+  #lobby .lb:hover::before,#lobby .lb:hover::after{content:none}
+  .evAction:hover{filter:none;transform:none}
+  #mctHud .tile:hover{transform:none}
+}
+@media (prefers-reduced-motion:reduce){#rotateMsg{animation:none}}
+

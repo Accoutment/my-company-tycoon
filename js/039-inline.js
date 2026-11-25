@@ -1,0 +1,1 @@
+window.DEVLOCK={ok:function(){try{return localStorage.getItem('mct_dev')==='1'}catch(e){return false}},unlock:function(){try{localStorage.setItem('mct_dev','1')}catch(e){}document.documentElement.classList.add('mct-dev')}};if(DEVLOCK.ok())document.documentElement.classList.add('mct-dev');

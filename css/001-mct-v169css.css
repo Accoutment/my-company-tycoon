@@ -1,0 +1,8 @@
+.cgBox{margin:0 0 12px;text-align:left}
+.cgT{font-weight:700;color:#ffd45a;margin:0 0 6px;font-size:14px}
+.cgRow{display:flex;gap:10px}
+.cgBtn{flex:1 1 0;display:flex;align-items:center;gap:10px;min-height:64px;padding:6px 10px;background:linear-gradient(#27275c,#14143a);border:2px solid #3b3b86;border-radius:10px;color:#d9e1fb;font-weight:700;font-size:15px;font-family:inherit;cursor:pointer;text-align:left}
+.cgBtn img{width:44px;height:73px;object-fit:cover;object-position:top;border-radius:6px;flex:none;background:#0a0f2a}
+.cgBtn.on{background:linear-gradient(#ffd84e,#e6a00b);border-color:#fff0a0;color:#2a1700;box-shadow:0 0 10px #ffb2004d}
+.cgBtn:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media (max-height:560px){.cgBtn{min-height:52px}.cgBtn img{width:34px;height:56px}}

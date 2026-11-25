@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+
+<html class="mct-booting" lang="th"><head><meta charset="utf-8"/><link id="mct-v169css" rel="stylesheet" href="css/001-mct-v169css.css"><script id="mct-v167" src="js/002-mct-v167.js"></script><script id="mct-coop-config" src="js/122-mct-coop-config.js"></script><script id="mct-coop-boot" src="js/122-mct-coop-boot.js"></script>
+<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" name="viewport"/>
+<meta content="yes" name="mobile-web-app-capable"/><meta content="yes" name="apple-mobile-web-app-capable"/>
+<title>MY COMPANY TYCOON v93 · CEO INFINITE LEVEL</title>
+<script src="js/003-inline.js"></script>
+<link rel="stylesheet" href="css/004-inline.css">
+<link id="mctBusCss" rel="stylesheet" href="css/005-mctBusCss.css">
+<link id="mctBootGuard" rel="stylesheet" href="css/006-mctBootGuard.css">
+<link id="mct-v49-clean-menu-frame" rel="stylesheet" href="css/007-mct-v49-clean-menu-frame.css">
+<link id="mct-v50-single-frame-flat-menu" rel="stylesheet" href="css/008-mct-v50-single-frame-flat-menu.css">
+<link id="ceo-hr-computer-style" rel="stylesheet" href="css/009-ceo-hr-computer-style.css">
+<link id="family-photo-wallpaper-style" rel="stylesheet" href="css/010-family-photo-wallpaper-style.css">
+<script id="mct-wardrobe-js" src="js/011-mct-wardrobe-js.js"></script>
+<script id="mct-yakuza-js" src="js/012-mct-yakuza-js.js"></script>
+<script id="mct-icon-const" src="js/013-mct-icon-const.js"></script>
+<script id="mct-religion-js" src="js/014-mct-religion-js.js"></script>
+<link id="mct-quest-css" rel="stylesheet" href="css/015-mct-quest-css.css">
+<script id="mct-quest-js" src="js/016-mct-quest-js.js"></script>
+<link rel="stylesheet" href="css/017-inline.css"><script id="mct-v162" src="js/018-mct-v162.js"></script><link id="mct-v166" rel="stylesheet" href="css/019-mct-v166.css"><script id="mct-v166s" src="js/020-mct-v166s.js"></script><script id="mct-v165" src="js/021-mct-v165.js"></script><script id="mct-v163" src="js/022-mct-v163.js"></script><script id="mct-i18n" src="js/023-mct-i18n.js"></script></head><body><div id="mctI2"><canvas></canvas></div><script src="js/024-inline.js"></script>
+<div id="top">
+<div class="hudL"><b id="tn"></b> <small id="tl"></small><button id="rpChip" title="CEO PROFILE (P)" onclick="CEORPG.open()">⭐ Lv.1</button></div>
+<div class="hudC"><b id="tmo"></b><small id="tt"></small></div>
+<div class="hudR"><span id="spdTag" title="ความเร็วเกม">▶ x1</span><button class="btn" id="calBtn" onclick="CAL.open()" title="ปฏิทิน · วันเกิด · โทรศัพท์"><img class="calIcoImg" alt="ปฏิทิน" src="assets/img/ca6beb425056.png"><b id="calBadge" hidden></b></button><button class="btn" id="menuBtn" onclick="UI.menu()" title="เมนู (M / Esc)">☰ เมนู</button></div>
+</div>
+<link id="rpgCss" rel="stylesheet" href="css/025-rpgCss.css">
+<div hidden id="ceoProf"><div class="rpPanel">
+<div class="rpHead"><div><h2>🌟 CEO PROFILE</h2><small>ใช้แต้มความสามารถ (SP) เพื่อเสริมศักยภาพของ CEO</small></div><div class="sp"></div><div class="rpSPc"><span id="rpSPl">SP</span><b id="rpSP">0</b></div><button class="rpX" data-rp-close title="ปิด (Esc)">✕</button></div>
+<div class="rpBody"><aside class="rpSide" id="rpSide"></aside><section class="rpMain"><div id="rpTabs"><button data-rp-tab="ov">OVERVIEW</button><button data-rp-tab="sk">SKILL TREE</button><button data-rp-tab="wh">WORK HISTORY</button><button data-rp-tab="ac">ACHIEVEMENTS</button><button data-rp-tab="ms">MASTERY</button></div><div id="rpView"></div></section></div>
+</div></div>
+<div hidden id="rpPrompt"></div>
+<div hidden id="ceoWork"><div class="rwPanel"><div id="rwHead"></div><div id="rwBar"><div id="rwBarFill"></div><span id="rwTime"></span></div><div id="rwBody"></div><div hidden id="rwRes"></div><div id="rwFoot"></div></div></div>
+<div hidden id="rpLvl"></div>
+
+<div id="busFade"></div>
+<div id="ceoScene">
+<div id="ceoSceneHead"><div><strong id="ceoSceneTitle">🌙 หลังเลิกงาน</strong><br/><small id="ceoSceneTime">เลือกสถานที่พักผ่อน</small></div><button class="btn" id="ceoSceneBackBtn" onclick="CEOScene.returnOffice()">กลับบริษัท ✕</button></div>
+<div id="ceoSceneCanvasWrap">
+<canvas height="600" id="ceoSceneCanvas" width="960"></canvas>
+<div id="ceoSceneHint">เดินด้วย WASD / ปุ่มลูกศร · กด E เพื่อโต้ตอบ · 🎣 ท่าเรือไม้ที่ทะเล = จุดตกปลา · คอนโด: ประตูล่าง = ออกไปทางเดิน · ทางเดิน: ประตู 302 = เข้าห้อง / ปลายทางเดินขวา = ลงบันไดไปรถเมล์ · ทะเล: เดินออกทางซ้ายสุด = กลับถนนคนเดิน · ถนน: ประตูตึกกลางบน = บริษัท, ซ้ายสุด = ทะเล, ขวาสุด = โชว์รูม/อควาเรียม</div>
+<div id="ceoSceneChoices" hidden>
+<div id="ceoSceneChoicePanel">
+<h2 id="busPickTitle">🚌 รถเมล์สาย 77</h2>
+<p id="busPickHint">กด 1 หรือ E เพื่อยืนยันปลายทาง</p>
+<div class="ceoDestGrid" style="grid-template-columns:1fr">
+<button class="ceoDest sel" id="busBtnDest" onclick="CEOScene.pickDest()"><canvas height="100" id="ceoDestPreview" width="240"></canvas><b id="busDestName">🏢 บริษัท (Company)</b><small id="busDestSub">เดินทางไปบริษัท</small></button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<main><canvas height="512" id="cv"></canvas></main>
+<div class="c" hidden="" id="info"></div>
+<div hidden="" id="toolChip"><span id="toolTxt"></span><button class="btn" onclick="UI.menu(1)">เมนู</button><button class="btn" onclick="UI.endTool()">✕ ออก</button></div>
+<!-- ===== Touch controls: จอยสติ๊กวงกลม (ซ้าย) + ปุ่มกด (ขวา) ===== -->
+<div id="joy"><div id="joyBase"><div id="joyKnob"></div></div></div>
+<div id="acts">
+<button class="act sm pcIconAct" hidden="" id="pcBtn" onclick="OS.open()" title="เปิดคอม (ห้อง Manager)"><img alt="คอมพิวเตอร์ CEO" class="pcIcon" src="assets/img/779dad736b04.png"/></button>
+<button class="act sm bagIconAct" id="bagBtn" onclick="CEOScene.bag()" title="กระเป๋า (B)"><img alt="" class="bagIcon" src="assets/img/43619c170784.png"/><i>กระเป๋า</i></button>
+<button class="act big" id="actMain" title="คุย / โต้ตอบ (E)"><span id="actIco">💬</span><i id="actTxt">คุย</i></button>
+</div>
+<!-- ===== เมนูเดียว แยกหมวด ===== -->
+<div hidden="" id="menu">
+<div class="mPanel">
+<div class="mSide">
+<div class="mTitle">☰ เมนู</div>
+<div id="mCats"></div>
+<nav hidden="" id="nav"></nav>
+<button class="btn mClose" onclick="UI.menu(0)">✕ ปิดเมนู</button>
+</div>
+<div class="mBody">
+<div id="mSub"></div>
+<div class="mNote" id="mPause">⏸ เกมหยุดชั่วคราวขณะเปิดเมนู</div>
+<div id="pn"></div>
+<div hidden="" id="sysPane">
+<div class="c"><b>⏱️ ความเร็วเกม</b><div class="sh">
+<button class="btn" data-sp="0" onclick="UI.speed(0)">⏸ หยุด</button><button class="btn" data-sp="1" onclick="UI.speed(1)">▶ x1</button><button class="btn" data-sp="2" onclick="UI.speed(2)">⏩ x2</button></div>
+<small id="dl">1 วัน=15 นาที</small></div>
+<div class="c"><b>💾 ข้อมูล / หน้าจอ</b><div class="sh"><button class="btn" onclick="save();toast('บันทึกเกมแล้ว')">💾 บันทึกเกม</button><button class="btn" onclick="UI.full()">⛶ เต็มจอ + ล็อกแนวนอน</button></div></div>
+<div class="c"><b>🎒 ของ</b><div class="sh"><button class="btn" onclick="UI.menu(0);CEOScene.bag()">🎒 เปิดกระเป๋า</button></div></div>
+<div class="c"><b>🎬 คัตซีน</b><div class="sh"><button class="btn" onclick="UI.menu(0);playIntro()">🎬 ดูคัตซีนเปิดเรื่องอีกครั้ง</button></div></div>
+<div class="c" id="devCard"><b>🧪 นักพัฒนา</b><div class="sh"><button class="btn" onclick="UI.menu(0);A.testOpen()">🧪 Test Mode</button></div></div>
+<div class="c" style="margin-top:10px"><button class="btn mReturnTitle" onclick="SLOTS.exit()" style="width:100%;min-height:40px">⌂ กลับหน้าเริ่มต้น</button></div>
+</div>
+</div>
+</div>
+</div>
+<link rel="stylesheet" href="css/026-inline.css">
+<script src="js/027-inline.js"></script>
+<div hidden="" id="rotateMsg"><div><div class="rIco">📱↻</div><h2>กรุณาหมุนจอเป็นแนวนอน</h2><p>เกมนี้เล่นในแนวนอน</p><button class="btn" onclick="UI.full()">⛶ เต็มจอ + ล็อกแนวนอน</button> </div></div>
+<div hidden="" id="ceoBag"><div class="bagPanel"><div class="bagHead"><b>🎒 กระเป๋า <small id="ceoBagCnt"></small></b><button class="btn" onclick="CEOScene.bag()">ปิด ✕</button></div><div class="bagPrev" hidden="" id="ceoBagPrev"></div><div class="bagGrid" id="ceoBagGrid"></div><small style="display:block;margin-top:8px;color:#b7c0d2">24 ช่อง · ของชนิดเดียวกันซ้อนได้ช่องละ 64 · กด B เพื่อเปิด/ปิด</small></div></div><div hidden="" id="clientModal"></div><div hidden="" id="loanModal"></div><div hidden="" id="osModal"></div><div hidden="" id="testModal"></div><div id="toast"></div>
+<div hidden="" id="over"><h2>บริษัทล้มละลาย</h2><button class="btn" onclick="A.reset(1)">เริ่มเกมใหม่</button></div>
+<script src="js/028-core-main.js"></script>
+<script src="js/029-camt-mgk.js"></script>
+<script src="js/030-inline.js"></script><script src="js/031-bad.js"></script>
+<script src="js/032-loan.js"></script>
+<link rel="stylesheet" href="css/033-inline.css">
+<button id="audioUnlock" type="button">🔊 แตะเพื่อเปิดเสียงเกม</button>
+<script src="js/034-tycoonaudio.js"></script>
+<script src="js/035-police-pspr-pcar.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Kanit:wght@600;800&amp;family=Press+Start+2P&amp;display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="css/036-inline.css">
+<div id="lobby"><div class="lz-stage">
+<button aria-label="เริ่มเล่น" class="hb" id="lbNew" style="left:41.0%;top:36.6%;width:22.9%;height:10.7%"></button>
+<button aria-label="เล่นต่อ" class="hb" id="lbCont" style="left:41.7%;top:48.7%;width:21.8%;height:9.6%"></button>
+<button aria-label="CODE รับไอเท็มพิเศษ" class="hb" id="lbCode" style="left:41.7%;top:59.7%;width:21.8%;height:9.6%"></button>
+<button aria-label="ตั้งค่า" class="hb" id="lbSet" style="left:41.7%;top:70.8%;width:21.8%;height:9.6%"></button>
+<button aria-label="ออกจากเกม" class="hb" id="lbExit" style="left:41.7%;top:81.6%;width:21.8%;height:9.6%"></button>
+</div>
+<div class="lz-ov" id="lbOv"><div class="lz-panel" id="lbSetP"><h2>⚙️ ตั้งค่า</h2>
+<label>🔊 เสียง <input id="lbSnd" type="checkbox"/></label>
+<label>🎚️ ระดับเสียง <input id="lbVol" max="100" min="0" type="range"/></label>
+<label>⛶ เต็มจอ <input id="lbFs" type="checkbox"/></label>
+<label>🎬 ฉากเปิดเกม <input id="lbIntro" type="checkbox" checked/></label>
+<div class="lz-keys"><b>คลิก</b>เลือก / สั่งงาน<br/><b>Esc</b>ปิดหน้าต่าง<br/><b>Space</b>หยุด / เล่นต่อเวลา</div>
+<label>🗑️ ลบเซฟ <button class="lb lz-re" id="lbDel" style="width:auto;margin:0;padding:2px 14px;font-size:15px">ลบ</button></label>
+<button class="lb lz-gr" data-back=""><span class="lz-tx">⬅ กลับ</span></button></div>
+<div class="lz-panel" id="lbCodeP"><h2>🎁 CODE</h2>
+<div class="lz-note" style="font-size:15px">ใส่โค้ดเพื่อรับไอเท็มพิเศษ (1 โค้ดรับได้ครั้งเดียวต่อเซฟ)</div>
+<div class="lz-row" style="margin-top:10px"><input id="lbCodeIn" maxlength="20" placeholder="พิมพ์โค้ดที่นี่" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex:1;text-transform:uppercase;letter-spacing:2px" type="text"/><button class="lb lz-bl" id="lbCodeB" style="width:auto;margin:0;padding:2px 14px;font-size:15px">รับโค้ด</button></div>
+<div class="lz-note" id="lbCodeMsg" style="min-height:42px">ของจะถูกมอบเมื่อเข้าเกม</div>
+<button class="lb lz-gr" data-back=""><span class="lz-tx">⬅ กลับ</span></button></div>
+<div class="lz-panel" id="lbExitP"><h2>⏻ ออกจากเกม?</h2><div class="lz-note" id="lbExitMsg" style="font-size:15px">เกมบันทึกอัตโนมัติแล้ว ต้องการออกจากเกมหรือไม่</div><button class="lb lz-re" id="lbExitY"><span class="lz-tx">ออกจากเกม</span></button><button class="lb lz-gr" data-back=""><span class="lz-tx">ยกเลิก</span></button></div>
+</div><div class="lz-fade" id="lbFade"></div></div>
+<script src="js/037-inline.js"></script>
+<script src="js/038-inline.js"></script>
+
+<script src="js/039-inline.js"></script>
+<script src="js/040-inline.js"></script>
+<link rel="stylesheet" href="css/041-inline.css">
+<script src="js/042-inline.js"></script>
+<script src="js/043-slots.js"></script>
+<script src="js/044-mcti2.js"></script>
+<script src="js/045-inline.js"></script>
+
+
+<!-- ===== v77 PIXEL HUD (Stardew-style) : แถบข้อมูลด้านขวา เชื่อมกับระบบเดิม S.day / S.t / S.money / currentSeason() ===== -->
+<link id="mct-v77-pixel-hud" rel="stylesheet" href="css/046-mct-v77-pixel-hud.css">
+<div id="mctHud" hidden aria-label="HUD ข้อมูลประจำวัน">
+<div class="scnw" data-s="spring"><img class="scn" alt="" draggable="false" src="assets/img/a4a0c02e593c.webp"/></div>
+<img class="fr" alt="" draggable="false" src="assets/img/490a60857c3c.png"/>
+<button id="mctHudTab" type="button" title="ซ่อน/แสดงแถบข้อมูล">›</button>
+<div class="abs col cal" title="วันที่ในเกม"><div class="d1">–</div><div class="d2">–</div></div>
+<div class="abs clk" title="เวลาในเกม"><span class="tm">00:00</span><span class="tp"></span></div>
+<div class="wicon"><img class="sun" alt="" src="assets/img/b7a1cffec433.png"/><svg class="wsvg" hidden viewBox="0 0 16 14" shape-rendering="crispEdges" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<div class="abs col wx" title="สภาพอากาศ"><div class="w1">–</div><div class="w2">–</div></div>
+<div class="coin"></div>
+<div class="abs money" title="เงินสดบริษัท"><span class="mv">$0</span></div>
+<div class="mdelta"></div>
+<div class="tile" data-s="sp" style="background-image:url(assets/img/964a383ca688.png)"></div>
+<div class="tile" data-s="su" style="background-image:url(assets/img/286330daff02.png)"></div>
+<div class="tile" data-s="au" style="background-image:url(assets/img/a9dd169c6448.png)"></div>
+<div class="tile" data-s="wi" style="background-image:url(assets/img/fc759957a742.png)"></div>
+</div>
+<script id="mct-v80-pixel-hud-js" src="js/047-mct-v80-pixel-hud-js.js"></script>
+<script id="mct-v91-ghost-night-js" src="js/048-mct-v91-ghost-night-js.js"></script>
+<script src="js/049-ceorpg.js"></script>
+<link id="calCss" rel="stylesheet" href="css/050-calCss.css">
+<script id="calIconSrc" src="js/051-calIconSrc.js"></script>
+<script id="calSys" src="js/052-calSys.js"></script>
+<link id="mct-v100-responsive" rel="stylesheet" href="css/053-mct-v100-responsive.css">
+<script id="mct-v100-responsive-js" src="js/054-mct-v100-responsive-js.js"></script>
+<script id="mct-keep-fullscreen" src="js/055-mct-keep-fullscreen.js"></script>
+<link id="mct-tutorial" rel="stylesheet" href="css/056-mct-tutorial.css">
+<script id="mct-tutorial-js" src="js/057-mct-tutorial-js.js"></script>
+<link id="mct-yakuza-ending-css" rel="stylesheet" href="css/058-mct-yakuza-ending-css.css">
+<script id="mct-yakuza-ending-js" src="js/059-mct-yakuza-ending-js.js"></script>
+
+<link id="mct-phone-css" rel="stylesheet" href="css/060-mct-phone-css.css">
+<script id="mct-phone-js" src="js/061-mct-phone-js.js"></script>
+
+<link id="mct-horror-ending-css" rel="stylesheet" href="css/062-mct-horror-ending-css.css">
+<script id="mct-horror-ending-js" src="js/063-mct-horror-ending-js.js"></script>
+
+<link id="mct-condoroom-css" rel="stylesheet" href="css/064-mct-condoroom-css.css">
+<script id="mct-hall-imgs" src="js/065-mct-hall-imgs.js"></script>
+<script id="mct-condoroom-js" src="js/066-mct-condoroom-js.js"></script>
+
+<script id="mct-test-extras-js" src="js/067-mct-test-extras-js.js"></script>
+
+<script id="mct-code-js" src="js/068-mct-code-js.js"></script>
+<script id="mct-daysum" src="js/069-mct-daysum.js"></script>
+
+<script id="farm-assets" src="js/070-farm-assets.js"></script>
+<script id="mct-farm-js" src="js/071-mct-farm-js.js"></script>
+
+<link id="mct-v154-css" rel="stylesheet" href="css/072-mct-v154-css.css">
+<script id="mct-v154-dock" src="js/073-mct-v154-dock.js"></script>
+
+<!-- ===== CARD SHOP + SNOOKER (v174) ===== -->
+<script id="mct-cover-assets" src="js/074-mct-cover-assets.js"></script>
+<script id="mct-snk-skins" src="js/075-mct-snk-skins.js"></script>
+<script id="mct-cardshop-assets" src="js/076-mct-cardshop-assets.js"></script>
+<script id="mct-snk-assets" src="js/077-mct-snk-assets.js"></script>
+<script id="mct-cardshop-cs-core" src="js/078-mct-cardshop-cs-core.js"></script>
+<script id="mct-cardshop-cs-gacha" src="js/079-mct-cardshop-cs-gacha.js"></script>
+<script id="mct-cardshop-cs-newsets" src="js/080-mct-cardshop-cs-newsets.js"></script>
+<script id="mct-cardshop-cs-auction" src="js/081-mct-cardshop-cs-auction.js"></script>
+<script id="mct-cardshop-cs-ui-a" src="js/082-mct-cardshop-cs-ui-a.js"></script>
+<script id="mct-cardshop-cs-ui-b" src="js/083-mct-cardshop-cs-ui-b.js"></script>
+<script id="mct-cardshop-cs-gacha-ui" src="js/084-mct-cardshop-cs-gacha-ui.js"></script>
+<script id="mct-cardshop-cs-auction-ui" src="js/085-mct-cardshop-cs-auction-ui.js"></script>
+<script id="mct-cardshop-cs-snk-core" src="js/086-mct-cardshop-cs-snk-core.js"></script>
+<script id="mct-cardshop-cs-snk-ui" src="js/087-mct-cardshop-cs-snk-ui.js"></script>
+<script id="mct-cardshop-cs-snk-skin" src="js/088-mct-cardshop-cs-snk-skin.js"></script>
+<script id="mct-cardshop-cs-signs" src="js/089-mct-cardshop-cs-signs.js"></script>
+<script id="mct-cardshop-cs-scene" src="js/090-mct-cardshop-cs-scene.js"></script>
+<script id="mct-cardshop-cs-auction-scene" src="js/091-mct-cardshop-cs-auction-scene.js"></script>
+<script id="mct-cardshop-cs-snk-scene" src="js/092-mct-cardshop-cs-snk-scene.js"></script>
+<script id="mct-cardshop-cs-cover" src="js/093-mct-cardshop-cs-cover.js"></script>
+<script id="mct-cardshop-cs-boot" src="js/094-mct-cardshop-cs-boot.js"></script>
+
+<script id="mct-station-assets" src="js/095-mct-station-assets.js"></script>
+<script id="mct-station-scene" src="js/096-mct-station-scene.js"></script>
+<script id="mct-wizard-assets" src="js/097-mct-wizard-assets.js"></script>
+<script id="mct-wizard-scene" src="js/098-mct-wizard-scene.js"></script>
+<script id="mct-wizard-rt" src="js/099-mct-wizard-rt.js"></script>
+<script id="mct-niceclub-assets" src="js/100-mct-niceclub-assets.js"></script>
+<script id="mct-niceclub-scene" src="js/101-mct-niceclub-scene.js"></script>
+<script id="mct-niceclub-songs" src="js/102-mct-niceclub-songs.js"></script>
+<script id="mct-niceclub-engine" src="js/103-mct-niceclub-engine.js"></script>
+<script id="mct-niceclub-play" src="js/104-mct-niceclub-play.js"></script>
+<script id="mct-niceclub-dev" src="js/105-mct-niceclub-dev.js"></script>
+<script id="mct-niceclub-select" src="js/106-mct-niceclub-select.js"></script>
+<script id="mct-roadcars" src="js/107-mct-roadcars.js"></script>
+<script id="mct-pack-cover" src="js/108-mct-pack-cover.js"></script>
+<script id="mct-rei-assets" src="js/109-mct-rei-assets.js"></script>
+<script id="mct-rei-core" src="js/110-mct-rei-core.js"></script>
+<script id="mct-forest-assets" src="js/111-mct-forest-assets.js"></script>
+<script id="mct-forest-data" src="js/112-mct-forest-data.js"></script>
+<script id="mct-forest-scene" src="js/113-mct-forest-scene.js"></script>
+<script id="mct-deep-assets" src="js/114-mct-deep-assets.js"></script>
+<script id="mct-deep-data" src="js/115-mct-deep-data.js"></script>
+<script id="mct-deep-scene" src="js/116-mct-deep-scene.js"></script>
+<script id="mct-quickmove" src="js/117-mct-quickmove.js"></script>
+<script id="mct-devx" src="js/118-mct-devx.js"></script>
+<script id="mct-quest-nui" src="js/119-mct-quest-nui.js"></script>
+<script id="mct-cardshop-assets-moon" src="js/119-mct-cardshop-assets-moon.js"></script>
+<script id="mct-cardshop-newsets-moon" src="js/120-mct-cardshop-newsets-moon.js"></script>
+<script id="mct-cardshop-gacha-multi" src="js/121-mct-cardshop-gacha-multi.js"></script>
+<script id="mct-coop" src="js/123-mct-coop.js"></script>
+</body></html>

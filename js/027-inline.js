@@ -1,0 +1,1 @@
+(function(){function lk(){try{if(screen.orientation&&screen.orientation.lock)screen.orientation.lock("landscape").catch(function(){})}catch(e){}}lk();addEventListener("pointerdown",lk,{once:true,passive:true});addEventListener("orientationchange",lk)})();

@@ -1,0 +1,1 @@
+window.CAL_ICON_SRC=(document.querySelector("#calBtn .calIcoImg")||{}).src||"";

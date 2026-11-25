@@ -1,0 +1,61 @@
+
+#lobby{position:fixed;inset:0;z-index:99999;font-family:'Kanit',sans-serif;color:#fff;overflow:hidden;background:#1a1030;user-select:none}
+#lobby canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;image-rendering:pixelated}
+#lobby .lz-ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.2vh;padding:2vh}
+#lobby .lz-logo{text-align:center;animation:lbFloat 3s ease-in-out infinite;margin-bottom:1vh;filter:drop-shadow(0 6px 0 #0a0820)}
+#lobby .lz-logo .lz-a,#lobby .lz-logo .lz-b{font-family:'Press Start 2P',monospace;display:block;line-height:1.15;letter-spacing:2px}
+#lobby .lz-logo .lz-a{font-size:clamp(20px,4.6vw,54px);color:#fff;-webkit-text-stroke:2px #1b2a8a;text-shadow:0 4px 0 #3b6bff,0 8px 0 #1b2a8a,4px 10px 0 #0a0820}
+#lobby .lz-logo .lz-b{font-size:clamp(26px,6vw,72px);color:#ffcc2e;-webkit-text-stroke:2px #8a3a00;text-shadow:0 4px 0 #ff8a1e,0 9px 0 #8a3a00,5px 12px 0 #0a0820}
+#lobby .lz-logo .lz-tag{display:inline-block;margin-top:10px;font-size:clamp(11px,1.3vw,15px);background:#1b2a8a;border:3px solid #0a0820;padding:2px 12px;color:#9fe3ff;animation:lbBlink 1.6s steps(2) infinite}
+#lobby .lb{position:relative;display:flex;align-items:center;gap:14px;width:min(360px,78vw);padding:.6em 1em;font:800 clamp(16px,2vw,24px) 'Kanit',sans-serif;color:#fff;border:4px solid #0a0820;border-radius:6px;cursor:pointer;
+ box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.35),0 6px 0 #0a0820;text-shadow:2px 2px 0 rgba(0,0,0,.45);transition:transform .1s,filter .1s,box-shadow .1s}
+#lobby .lb .lz-ic{width:1.6em;text-align:center;font-size:1.1em}
+#lobby .lb .lz-tx{flex:1;text-align:center;line-height:1.05}
+#lobby .lb small{display:block;font-size:.6em;font-weight:600}
+#lobby .lb:hover{transform:translateY(-3px) scale(1.04);filter:brightness(1.15);box-shadow:inset 0 -6px 0 rgba(0,0,0,.28),inset 0 4px 0 rgba(255,255,255,.35),0 9px 0 #0a0820,0 0 18px rgba(255,220,120,.6)}
+#lobby .lb:hover::after{content:'◀';position:absolute;right:-34px;color:#ffcc2e;animation:lbPoint .5s ease-in-out infinite alternate}
+#lobby .lb:hover::before{content:'▶';position:absolute;left:-34px;color:#ffcc2e;animation:lbPoint .5s ease-in-out infinite alternate-reverse}
+#lobby .lb:active,#lobby .lb.pressed{transform:translateY(4px) scale(.97);box-shadow:inset 0 -2px 0 rgba(0,0,0,.28),0 1px 0 #0a0820}
+#lobby .lb:disabled{filter:grayscale(1) brightness(.7);cursor:not-allowed;transform:none}
+#lobby .lb:disabled::after,#lobby .lb:disabled::before{content:none}
+#lobby .lz-y{background:#ffb81c;color:#3a1a00;text-shadow:none;width:min(390px,84vw);font-size:clamp(20px,2.6vw,30px)}
+#lobby .lz-bl{background:#2f7dff}#lobby .lz-pu{background:#9a4dff}#lobby .lz-gr{background:#7b8196}#lobby .lz-re{background:#e8393f}
+#lobby .lz-panel{display:none;width:min(440px,90vw);background:#221a4a;border:4px solid #0a0820;box-shadow:0 0 0 3px #ffcc2e,0 10px 0 6px #0a0820;border-radius:6px;padding:18px 22px;animation:lbPop .2s ease-out}
+#lobby .lz-panel h2{margin:0 0 10px;color:#ffcc2e;font-size:24px;text-align:center}
+#lobby .lz-panel label,#lobby .lz-row{display:flex;justify-content:space-between;align-items:center;gap:12px;margin:8px 0;font-weight:600}
+#lobby .lz-panel select,#lobby .lz-panel input[type=text]{font:600 15px 'Kanit';background:#0f0b2a;color:#fff;border:2px solid #5a4ea0;padding:4px 8px;border-radius:4px}
+#lobby .lz-panel .lb{width:100%;margin-top:10px;font-size:18px}
+#lobby .lz-keys{font-size:14px;color:#cfd6ff;line-height:1.7;background:#0f0b2a;padding:8px 12px;border-radius:4px}
+#lobby .lz-keys b{display:inline-block;min-width:44px;background:#3a3170;border-radius:3px;text-align:center;margin-right:6px}
+#lobby .lz-note{font-size:13px;color:#ffd98a;text-align:center;margin-top:6px}
+#lobby .lz-code{font-family:'Press Start 2P';font-size:20px;letter-spacing:4px;color:#9fe3ff}
+#lobby .lz-ver{position:absolute;bottom:8px;right:12px;font:10px 'Press Start 2P';color:rgba(255,255,255,.6)}
+#lobby .lz-fade{position:absolute;inset:0;background:#000;opacity:0;pointer-events:none;transition:opacity .5s}
+@keyframes lbFloat{50%{transform:translateY(-8px)}}
+@keyframes lbBlink{50%{opacity:.4}}
+@keyframes lbPoint{to{transform:translateX(6px)}}
+@keyframes lbPop{from{transform:scale(.85);opacity:0}}
+
+#lobby{background:#120c26}
+#lobby .lz-stage{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(100vw,calc(100vh*1672/941));aspect-ratio:1672/941;background:url(../assets/img/967d2fa71e07.webp) center/100% 100% no-repeat}
+#lobby .hb{position:absolute;background:transparent;border:0;padding:0;cursor:pointer;border-radius:1vmin;transition:box-shadow .12s,transform .08s,filter .12s}
+#lobby .hb:hover,#lobby .hb:focus-visible{outline:none;box-shadow:0 0 0 2px rgba(255,240,170,.9),0 0 22px 6px rgba(255,220,120,.75),inset 0 0 18px rgba(255,255,220,.35)}
+#lobby .hb:active,#lobby .hb.pressed{transform:translateY(3px) scale(.97);box-shadow:0 0 0 2px rgba(255,255,255,.9),0 0 10px 3px rgba(255,220,120,.6),inset 0 0 30px rgba(0,0,0,.35)}
+#lobby .hb:disabled{cursor:not-allowed;background:rgba(20,20,40,.45)}
+#lobby .lz-ov{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(10,6,30,.55)}
+
+/* ===== MCT publisher intro video ===== */
+#mctIntro{position:fixed;inset:0;z-index:1000000;background:#000;display:flex;align-items:center;justify-content:center;overflow:hidden;opacity:1;transition:opacity .55s ease}
+#mctIntro.mctIntroOut{opacity:0;pointer-events:none}
+#mctIntro video{display:block;width:100%;height:100%;object-fit:contain;background:#000}
+#mctIntro .mctIntroSkip{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));padding:9px 16px;border:1px solid #d7b45e;border-radius:8px;background:rgba(12,18,34,.78);color:#fff;font:600 14px system-ui,'Noto Sans Thai',sans-serif;cursor:pointer;backdrop-filter:blur(5px)}
+#mctIntro .mctIntroSound{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);padding:9px 16px;border:1px solid #d7b45e;border-radius:8px;background:rgba(12,18,34,.82);color:#fff;font:600 14px system-ui,'Noto Sans Thai',sans-serif;cursor:pointer}
+#mctIntro button:active{transform:translateY(2px)}
+#mctIntro .mctIntroSound[hidden]{display:none}
+
+
+/* v51: replace the main talk action with the supplied gold chat medallion */
+#actMain{background-image:url("../assets/img/137c47c7d2f2.png")!important;background-position:center!important;background-repeat:no-repeat!important;background-size:100% 100%!important;background-color:transparent!important;border:0!important;box-shadow:none!important;filter:none}
+#actMain span,#actMain i{opacity:0!important}
+body.inScene #actMain{background:radial-gradient(circle at 35% 30%,#ffd45a,#c4871a)!important;border:2px solid #ffd45a!important;box-shadow:0 4px 10px #0009!important}
+body.inScene #actMain span,body.inScene #actMain i{opacity:1!important}

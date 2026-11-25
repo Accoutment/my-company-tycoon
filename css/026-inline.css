@@ -1,0 +1,4 @@
+
+#rotateMsg:not([hidden]){display:flex!important;position:fixed!important;inset:0!important;z-index:2147483000!important;pointer-events:auto!important;background:#0b0e14!important;color:#fff!important;border:0!important;border-radius:0!important;padding:24px!important;animation:none!important;opacity:1!important;visibility:visible!important;max-height:none!important}
+#rotateMsg .rIco{display:block!important;font-size:64px!important}
+#rotateMsg h2{font-size:22px!important}#rotateMsg p{font-size:15px!important}

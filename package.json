@@ -1,0 +1,11 @@
+{
+  "name": "my-company-tycoon",
+  "version": "1.0.0",
+  "description": "MY COMPANY TYCOON — HTML5 game with Co-op server",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "node build.js"
+  },
+  "engines": { "node": ">=16" }
+}

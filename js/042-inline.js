@@ -1,0 +1,1 @@
+window.SLOT_CREST='assets/img/e36affdfdbd0.png';

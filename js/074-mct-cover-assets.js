@@ -1,0 +1,1 @@
+window.COVER_ASSETS={"cover": "", "icon": "assets/img/9e4e675fad7d.png", "fav": "assets/img/33e98d99418a.png"};

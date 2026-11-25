@@ -1,0 +1,1 @@
+window.MCT_ICON={get bag(){try{return document.querySelector("#bagBtn img.bagIcon").src}catch(e){return""}},hand:"assets/img/49d7b07cab26.png"};

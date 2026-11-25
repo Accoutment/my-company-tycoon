@@ -1,0 +1,43 @@
+
+/* v49: ใช้กรอบตกแต่งเปล่าเป็นชั้นหลัง แยกข้อความและปุ่มเป็น HTML จริง */
+#menu{align-items:center!important;justify-content:center!important;}
+#menu .mPanel{
+  width:min(1100px, 100%, calc(92vh * 1.7889))!important;
+  height:auto!important; max-height:92vh!important; min-height:0!important;
+  aspect-ratio:1677 / 938!important; box-sizing:border-box!important;
+  display:flex!important; overflow:hidden!important;
+  background-color:#0b142b!important;
+  background-image:url("../assets/img/6c41dde6dc1b.webp")!important;
+  background-position:center!important; background-repeat:no-repeat!important; background-size:100% 100%!important;
+  border:0!important; border-radius:0!important; box-shadow:none!important;
+}
+#menu .mSide{
+  flex:0 0 20.1%!important; width:20.1%!important; min-width:0!important;
+  padding:3.1% 1.35% 3.0% 1.35%!important; gap:7px!important;
+  background:transparent!important; border:0!important; overflow-y:auto!important;
+}
+#menu .mBody{
+  flex:1 1 79.9%!important; min-width:0!important; min-height:0!important;
+  padding:1.8% 1.7% 1.6% 1.7%!important;
+  background:transparent!important; border:0!important; overflow:auto!important;
+}
+#menu .mTitle{padding:0 4px 5px!important; background:transparent!important;}
+#menu #mCats{gap:7px!important;}
+#menu .mCat{box-sizing:border-box!important; min-height:42px!important; padding:8px 9px!important; border-radius:9px!important;}
+#menu .mClose{margin-top:auto!important; min-height:40px!important; border-radius:8px!important;}
+#menu #mSub{min-height:44px!important; align-content:center!important; margin:0 0 7px!important; padding:0 2px!important; background:transparent!important;}
+#menu #mSub .btn{min-height:34px!important;}
+#menu .mNote{margin:0 0 7px!important; padding:0 3px!important;}
+#menu #pn,#menu #sysPane{min-width:0!important;}
+#menu .c{box-sizing:border-box!important; max-width:100%!important; margin-bottom:7px!important;}
+#menu .sh{display:flex!important; flex-wrap:wrap!important; gap:6px!important;}
+#menu .mReturnTitle{width:100%!important; min-height:38px!important;}
+@media(max-width:700px){
+ #menu{padding:4px!important;}
+ #menu .mPanel{width:min(100%,calc(92vh * 1.7889))!important;max-height:94vh!important;}
+ #menu .mSide{flex-basis:20.1%!important;width:20.1%!important;padding:3% 1.2%!important;gap:5px!important;}
+ #menu .mCat{min-height:34px!important;padding:5px 6px!important;font-size:12px!important;gap:4px!important;}
+ #menu .mCat .mIc{font-size:15px!important;}
+ #menu .mBody{padding:1.7% 1.5%!important;}
+ #menu #mSub .btn{padding:4px 7px!important;font-size:12px!important;}
+}

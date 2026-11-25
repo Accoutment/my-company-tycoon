@@ -1,0 +1,86 @@
+/* ===== v93 CEO PROFILE / ACTIVE WORK (Pixel RPG: ม่วงเข้ม · ทอง · น้ำเงิน) ===== */
+#ceoProf[hidden],#ceoWork[hidden],#rpPrompt[hidden],#rpLvl[hidden]{display:none!important}
+#ceoProf{position:fixed;inset:0;z-index:196;display:flex;align-items:center;justify-content:center;background:rgba(8,6,20,.74);padding:8px;font-family:inherit}
+.rpPanel{width:min(1020px,100%);height:min(640px,100%);display:flex;flex-direction:column;background:linear-gradient(#2a2347,#1d1836);border:3px solid #5b4fa0;border-radius:8px;box-shadow:0 0 0 2px #120d26,0 10px 40px #000a,inset 0 0 0 2px #3a3170;color:#e8e4ff;overflow:hidden}
+.rpHead{display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(#3a3170,#2a2347);border-bottom:2px solid #120d26}
+.rpHead h2{margin:0;font-size:20px;letter-spacing:1px;color:#fff1a8;text-shadow:0 2px 0 #000}
+.rpHead small{display:block;color:#b8b0e8;font-size:11px}
+.rpHead .sp{flex:1}
+.rpSPc{display:flex;align-items:center;gap:6px;background:#17122d;border:2px solid #6a5cc4;border-radius:14px;padding:3px 12px;font-weight:700;color:#fff}
+.rpSPc i{font-style:normal;color:#a99cff;font-size:12px}
+.rpX{background:#c62f3a;color:#fff;border:2px solid #ff8d96;border-radius:6px;width:34px;height:30px;font-weight:700;cursor:pointer}
+.rpBody{flex:1;display:flex;min-height:0}
+.rpSide{width:210px;flex:none;padding:10px;background:#1a1530;border-right:2px solid #120d26;overflow:auto;text-align:center}
+#rpPort{width:96px;height:132px;image-rendering:pixelated;background:radial-gradient(#4a3f8f,#241d3d);border:3px solid #6a5cc4;border-radius:10px}
+.rpName{font-weight:700;margin-top:4px}.rpLv{font-size:22px;color:#ffd45a;font-weight:800;text-shadow:0 2px 0 #000}
+.rpXB{height:12px;background:#0e0b1f;border:2px solid #4b3f93;border-radius:8px;overflow:hidden;margin:4px 0}.rpXB i{display:block;height:100%;background:linear-gradient(#b99bff,#7b5cf0)}
+.rpXB.big{height:16px}.rpXT{font-size:12px;color:#c9c0ff}
+.rpPts{display:flex;justify-content:center;gap:10px;margin-top:8px;font-size:13px}.rpPts span{background:#251e47;border:1px solid #4b3f93;border-radius:10px;padding:2px 8px}.rpPts b{color:#ffd45a}
+.rpMain{flex:1;display:flex;flex-direction:column;min-width:0}
+#rpTabs{display:flex;gap:4px;padding:8px 8px 0;overflow-x:auto;flex:none}
+#rpTabs button{flex:1 0 auto;min-width:92px;font:inherit;font-size:12px;font-weight:700;color:#cfc8ff;background:#231c3f;border:2px solid #3f3580;border-bottom:none;border-radius:8px 8px 0 0;padding:7px 8px;cursor:pointer;white-space:nowrap}
+#rpTabs button.on{background:linear-gradient(#6b4fe0,#4b36b0);color:#fff;border-color:#9a86ff}
+#rpView{flex:1;overflow:auto;padding:10px;background:#211a3d;border-top:2px solid #3f3580}
+.rpGrid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rpBox{background:#1a1530;border:2px solid #3f3580;border-radius:8px;padding:8px 10px}
+.rpBox h4{margin:0 0 6px;font-size:13px;color:#ffd45a}
+.rpStat>div{display:flex;justify-content:space-between;gap:8px;padding:3px 0;border-bottom:1px dashed #3a3170;font-size:12px}.rpStat b{color:#6ee7a0}
+.rpRw>div{padding:4px 6px;margin:3px 0;border:1px solid #3a3170;border-radius:6px;font-size:12px;opacity:.6}.rpRw>div.got{opacity:1;border-color:#ffd45a;background:#2b2450}.rpRw small{display:block;color:#b8b0e8}
+.rpBr{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.rpBr button{font:inherit;font-size:12px;font-weight:700;color:#cfc8ff;background:#231c3f;border:2px solid #3f3580;border-radius:8px;padding:5px 10px;cursor:pointer}
+.rpBr button.on{background:#2f2570;color:#fff;border-color:var(--bc)}
+.rpSkills{display:flex;flex-direction:column;gap:8px}
+.rpSk{display:grid;grid-template-columns:64px 1fr auto;gap:10px;align-items:center;background:#1a1530;border:2px solid #3f3580;border-left:4px solid var(--bc,#7aa2ff);border-radius:8px;padding:8px}
+.rpSk.locked{opacity:.78}
+.rpSkI{text-align:center}.rpSkI span{display:flex;align-items:center;justify-content:center;font-size:26px;width:54px;height:54px;margin:0 auto;background:#2b2450;border:2px solid #6a5cc4;border-radius:10px}
+.rpSkI i{display:block;font-style:normal;font-size:10px;color:#cfc8ff;margin-top:2px}
+.rpSkM b{font-size:14px;color:#fff}.rpSkM p{margin:2px 0;font-size:12px;color:#c9c0ff;line-height:1.3}.rpSkM .eff{color:#9be7ff}.rpSkM em{color:#6ee7a0;font-style:normal}
+.pips{display:flex;gap:3px;margin-top:4px}.pips u{width:16px;height:8px;background:#3a3170;border-radius:2px}.pips u.on{background:#ffd45a;box-shadow:0 0 4px #ffd45a88}
+.why{color:#ff9aa2;font-size:11px}
+.rpSkR{text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}.cost{font-size:12px;font-weight:700;color:#cbbcff}
+.rpUp{font:inherit;font-weight:800;font-size:13px;color:#2b1d00;background:linear-gradient(#ffd45a,#e0a82e);border:2px solid #fff0a8;border-radius:8px;padding:6px 14px;cursor:pointer;min-width:90px}
+.rpUp:disabled{background:#3a3560;color:#8f88bd;border-color:#4b4480;cursor:not-allowed}.rpUp.max{background:#2f6b4a;color:#c9ffe0;border-color:#6ee7a0}
+.rpNote{font-size:12px;color:#ffd45a;margin:8px 0 0}
+.rpEmpty{color:#b8b0e8;font-size:13px;line-height:1.5}
+.rpHist>div{display:grid;grid-template-columns:96px 1.6fr .8fr 1.4fr 1.2fr;gap:6px;font-size:12px;padding:4px 2px;border-bottom:1px dashed #3a3170}
+.rpAch{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.rpAch>div{border:1px solid #3a3170;border-radius:8px;padding:6px 8px;opacity:.55;font-size:12px}.rpAch>div.got{opacity:1;border-color:#ffd45a;background:#2b2450}.rpAch span{font-size:20px;margin-right:6px}.rpAch small{display:block;color:#b8b0e8}
+/* ===== station prompt ===== */
+#rpPrompt{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + var(--sb,0px));z-index:31;width:min(330px,44vw);background:linear-gradient(#2a2347,#1d1836);border:2px solid #ffd45a;border-radius:10px;padding:7px 9px;color:#fff;box-shadow:0 4px 18px #000a;font-size:12px}
+#rpPrompt .rpPT{display:flex;gap:8px;align-items:center}#rpPrompt .rpPI{font-size:24px}#rpPrompt b{font-size:13px;color:#fff1a8}#rpPrompt small{display:block;color:#b8b0e8}
+#rpPrompt .rpPP{margin:5px 0;color:#c9c0ff;line-height:1.35;max-height:3.2em;overflow:hidden}
+.rpPB{display:flex;gap:6px}.rpGo{flex:1;font:inherit;font-weight:800;color:#2b1d00;background:linear-gradient(#ffd45a,#e0a82e);border:2px solid #fff0a8;border-radius:8px;padding:6px;cursor:pointer;position:relative}
+.rpGo i{font-style:normal;font-size:10px;background:#2b1d00;color:#ffd45a;border-radius:4px;padding:0 4px;margin-left:6px}.rpGo:disabled{background:#3a3560;color:#8f88bd;border-color:#4b4480;cursor:not-allowed}.rpGo.sp{flex:none;background:linear-gradient(#b99bff,#7b5cf0);color:#fff;border-color:#d6c8ff}
+/* ===== mini-game ===== */
+#ceoWork{position:fixed;inset:0;z-index:197;display:flex;align-items:center;justify-content:center;background:rgba(8,6,20,.55);padding:8px}
+.rwPanel{width:min(560px,100%);max-height:100%;overflow:auto;background:linear-gradient(#2a2347,#1d1836);border:3px solid #ffd45a;border-radius:10px;padding:10px;color:#fff;box-shadow:0 10px 40px #000a}
+#rwHead{display:flex;gap:10px;align-items:center}#rwHead b{font-size:16px;color:#fff1a8;display:block}#rwHead small{color:#b8b0e8}.rwIc{font-size:30px}
+#rwBar{position:relative;height:16px;margin:8px 0;background:#0e0b1f;border:2px solid #4b3f93;border-radius:9px;overflow:hidden}#rwBarFill{height:100%;width:100%;background:linear-gradient(#ffe27a,#e0a82e)}#rwTime{position:absolute;right:8px;top:-1px;font-size:11px;font-weight:700;color:#fff;text-shadow:0 1px 0 #000}
+.rwP{margin:4px 0 8px;color:#e8e4ff;font-size:13px}.rwRowL{font-size:11px;color:#b8b0e8;margin:6px 0 2px}
+.rwSeq{display:flex;gap:6px;justify-content:center;margin-bottom:10px}.rwSeq span{width:38px;height:44px;display:flex;align-items:center;justify-content:center;font:800 22px monospace;background:#17122d;border:2px solid #4b3f93;border-radius:6px;color:#8f88bd}.rwSeq span.ok{background:#1f5a3c;border-color:#6ee7a0;color:#fff}.rwSeq span.cur{border-color:#ffd45a;color:#ffd45a;box-shadow:0 0 8px #ffd45a88}.rwSeq span.bad{background:#7a1f2b;border-color:#ff7b7b}
+.rwPad{display:grid;grid-template-columns:repeat(8,1fr);gap:5px}.rwPad button,.rwDoc,.rwTiles button,.rwOpts button,.rwTasks button{font:inherit;color:#fff;background:#2b2450;border:2px solid #5b4fa0;border-radius:8px;cursor:pointer;touch-action:manipulation}
+.rwPad button{height:40px;font:800 16px monospace}.rwPad button:active,.rwOpts button:active{background:#6b4fe0}
+.rwDocs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.rwDoc{padding:8px 4px;text-align:center}.rwDoc small{display:block;color:#b8b0e8;font-size:10px}.rwDoc b{font:800 16px monospace}.rwDoc.pick{background:#1f5a3c;border-color:#6ee7a0}
+.rwTiles{display:flex;gap:6px;justify-content:center}.rwTiles span,.rwTiles button{width:52px;height:52px;font-size:28px;display:flex;align-items:center;justify-content:center;padding:0}.rwTiles.tgt span{background:#17122d;border:2px solid #ffd45a;border-radius:8px}.rwTiles button.sel{border-color:#ffd45a;box-shadow:0 0 10px #ffd45a}.rwTiles button.ok{border-color:#6ee7a0}
+.rwOpts{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rwOpts button{padding:12px 6px;font-size:14px;font-weight:700}
+.rwTasks{display:grid;grid-template-columns:1fr 1fr;gap:8px}.rwTasks button{padding:8px;text-align:left}.rwTasks b{color:#ffd45a;float:right}.rwTasks span{font-weight:700;font-size:13px;display:block}.rwTasks small{color:#b8b0e8}.rwTasks button.dn{background:#1f5a3c;border-color:#6ee7a0}
+.rwAct{text-align:center;margin-top:10px}.rwBtn{font:inherit;font-weight:800;color:#2b1d00;background:linear-gradient(#ffd45a,#e0a82e);border:2px solid #fff0a8;border-radius:8px;padding:8px 26px;cursor:pointer}
+#rwFoot{margin-top:6px;text-align:center;color:#8f88bd}
+#rwRes{text-align:center}.rwGrade{font:900 34px monospace;text-shadow:0 3px 0 #000;letter-spacing:2px}.rwGth{color:#c9c0ff;margin-bottom:8px}
+.rwRows{background:#17122d;border:2px solid #3f3580;border-radius:8px;padding:4px 10px;text-align:left}.rwRows>div{display:flex;justify-content:space-between;gap:10px;padding:4px 0;border-bottom:1px dashed #3a3170;font-size:13px}.rwRows b{color:#6ee7a0}
+.rwLv{margin-top:8px;font-weight:800;color:#fff1a8;font-size:16px}
+/* ===== level-up banner ===== */
+#rpLvl{position:fixed;left:50%;top:22%;transform:translate(-50%,0);z-index:260;pointer-events:none;text-align:center;background:linear-gradient(#3a2e7a,#1d1836);border:3px solid #ffd45a;border-radius:12px;padding:12px 28px;color:#fff;box-shadow:0 0 30px #ffd45a88}
+#rpLvl.go{animation:rpLv .5s cubic-bezier(.2,1.6,.4,1)}@keyframes rpLv{from{transform:translate(-50%,-30px) scale(.4);opacity:0}to{transform:translate(-50%,0) scale(1);opacity:1}}
+.rpLvT{font:900 26px monospace;color:#ffd45a;letter-spacing:3px;text-shadow:0 3px 0 #000}.rpLvN{font:800 20px monospace}.rpLvP{color:#6ee7a0;font-size:13px;margin-top:2px}.rpLvL{font-size:12px;color:#d6d0ff;margin-top:2px}
+#rpChip{padding:3px 8px;font-size:12px;font-weight:700;color:#2b1d00;background:linear-gradient(#ffd45a,#e0a82e);border:1px solid #fff0a8;border-radius:12px;cursor:pointer;margin-left:6px;font-family:inherit}
+/* ===== มือถือแนวนอน / จอเตี้ย ===== */
+@media (max-height:520px){
+ #ceoProf{padding:2px}.rpPanel{height:100%;border-width:2px}.rpHead{padding:4px 8px}.rpHead h2{font-size:15px}.rpHead small{display:none}
+ .rpSide{width:128px;padding:6px}#rpPort{width:60px;height:82px}.rpLv{font-size:16px}.rpName{font-size:12px}.rpXT{font-size:10px}.rpPts{font-size:11px;gap:4px;flex-wrap:wrap}
+ #rpTabs button{min-width:70px;font-size:10px;padding:5px 4px}#rpView{padding:6px}
+ .rpSk{grid-template-columns:44px 1fr auto;gap:6px;padding:5px}.rpSkI span{width:38px;height:38px;font-size:18px}.rpSkM p{font-size:10px}.rpSkM b{font-size:12px}.pips u{width:11px;height:6px}
+ .rpUp{min-width:62px;padding:4px 6px;font-size:11px}.cost{font-size:10px}.rpGrid2{grid-template-columns:1fr}.rpHist>div{grid-template-columns:70px 1.5fr .8fr 1.2fr 1fr;font-size:10px}
+ #rpPrompt{width:min(300px,42vw);padding:5px 7px;bottom:calc(8px + var(--sb,0px))}#rpPrompt .rpPP{font-size:11px;max-height:2.7em}.rpGo{padding:4px}
+ .rwPanel{padding:6px}.rwPad button{height:30px;font-size:13px}.rwSeq span{width:30px;height:34px;font-size:18px}.rwTiles span,.rwTiles button{width:42px;height:42px;font-size:22px}.rwOpts button{padding:7px 4px;font-size:12px}.rwGrade{font-size:26px}
+}
+@media (max-width:640px){.rpSide{display:none}.rpGrid2{grid-template-columns:1fr}}

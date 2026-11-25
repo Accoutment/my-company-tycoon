@@ -1,0 +1,5 @@
+
+#busFade{position:fixed;inset:0;z-index:300;background:#000;opacity:0;pointer-events:none}
+#ceoScene.busPick #ceoSceneChoices{background:rgba(4,8,18,.56)!important}
+.ceoDest.sel{outline:3px solid #ffd45a;box-shadow:0 0 18px #ffd45a88;background:#33496c}
+.ceoDest:hover{background:#2f4468}

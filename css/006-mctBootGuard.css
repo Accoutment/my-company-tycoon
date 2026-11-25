@@ -1,0 +1,6 @@
+
+html.mct-booting,html.mct-booting body{background:#000!important;min-height:100%;overflow:hidden!important}
+html.mct-booting body{visibility:hidden!important}
+html.mct-booting #mctIntro{visibility:visible!important;display:flex!important;opacity:1!important;z-index:2147483647!important}
+html.mct-booting #mctIntro video{opacity:0;background:#000}
+html.mct-booting #mctIntro.mct-video-ready video{opacity:1}

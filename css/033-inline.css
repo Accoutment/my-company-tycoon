@@ -1,0 +1,8 @@
+
+#audioUnlock{position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 44px);z-index:10000;
+ border:1px solid #f5cf70;border-radius:22px;background:#182238ee;color:#ffe6a0;
+ padding:7px 13px;font:700 13px system-ui,'Noto Sans Thai',sans-serif;box-shadow:0 3px 14px #0009;cursor:pointer}
+#audioUnlock.ready{background:#164b36ee;border-color:#72d6a0;color:#d7ffe8}
+#audioUnlock:active{transform:scale(.96)}
+#audioSettings{border-color:#8e7138}
+#audioSettings input[type=range]{accent-color:#e0a82e}

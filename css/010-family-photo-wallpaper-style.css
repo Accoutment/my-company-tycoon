@@ -1,0 +1,4 @@
+
+/* Family-photo wallpaper: desktop + both desktop/app surfaces */
+.osDesk{background-image:linear-gradient(180deg,rgba(7,13,25,.30),rgba(7,13,25,.48)),url("../assets/img/85780dfc28c1.jpg") !important;background-size:cover !important;background-position:center center !important;background-repeat:no-repeat !important;}
+.osWin{background-color:rgba(17,27,46,.94) !important;background-image:linear-gradient(180deg,rgba(10,18,34,.84),rgba(10,18,34,.93)),url("../assets/img/85780dfc28c1.jpg") !important;background-size:cover !important;background-position:center center !important;}

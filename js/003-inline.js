@@ -1,0 +1,1 @@
+window.addEventListener("error",function(e){var d=document.getElementById("errBox")||document.body.appendChild(Object.assign(document.createElement("div"),{id:"errBox"}));d.textContent+="ERROR: "+e.message+" ("+(e.lineno||"?")+")\n"});

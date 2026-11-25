@@ -1,0 +1,1 @@
+setTimeout(function(){var e=document.getElementById('mctI2');if(e&&!window.__mctI2)e.remove()},6000);setTimeout(function(){var e=document.getElementById('mctI2');if(e)e.remove()},14000)

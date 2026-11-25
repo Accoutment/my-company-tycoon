@@ -1,0 +1,76 @@
+
+#ykDlg,#ykPrep,#ykEnd,#ykFade{font-family:'Noto Sans Thai','Sarabun',system-ui,sans-serif;color:#f3e9e4}
+/* ---------- การ์ดภารกิจลับในหน้า Quest ---------- */
+#qJ .ykQIt{display:block;width:100%;text-align:left;cursor:pointer;margin:0 0 6px;padding:8px 10px;border-radius:8px;border:1px solid #b3122a;background:linear-gradient(135deg,#1a0307,#3a0610 60%,#12020a);color:#ff2a3c!important;box-shadow:0 0 12px rgba(255,30,60,.35),inset 0 0 14px rgba(0,0,0,.7);font:700 14px 'Noto Sans Thai','Sarabun',sans-serif;position:relative;overflow:hidden;animation:ykPulse 2.2s ease-in-out infinite}
+#qJ .ykQIt.on{border-color:#ff4a5a;box-shadow:0 0 18px rgba(255,40,70,.6),inset 0 0 14px rgba(0,0,0,.7)}
+#qJ .ykQIt .ykSym{display:inline-block;margin-right:6px;filter:drop-shadow(0 0 4px #ff1a35)}
+#qJ .ykQIt .ykT{color:#ff2a3c!important;text-shadow:0 0 8px rgba(255,20,50,.8)}
+#qJ .ykQIt small{display:block;margin-top:3px;font:600 11px 'Noto Sans Thai',sans-serif;color:#c9707a!important;letter-spacing:.04em}
+#qJ .ykBadge{display:inline-block;font:800 10px/1 'Noto Sans Thai',sans-serif;letter-spacing:.14em;color:#000!important;background:#ff2a3c;border-radius:4px;padding:3px 6px;margin-left:6px;vertical-align:middle;box-shadow:0 0 8px #ff2a3c}
+#qJ .ykQDt{background:radial-gradient(ellipse at top,#2a0409,#080204);border:1px solid #6e0f1d;border-radius:10px;padding:12px 14px}
+#qJ .ykQDt h3{margin:0 0 6px;color:#ff2a3c!important;text-shadow:0 0 10px rgba(255,20,50,.9);letter-spacing:.06em}
+#qJ .ykQDt p{color:#e3c9cc!important;line-height:1.6;margin:6px 0}
+#qJ .ykBtn,#ykDlg .ykBtn,#ykPrep .ykBtn,#ykEnd .ykBtn{cursor:pointer;font:700 15px 'Noto Sans Thai','Sarabun',sans-serif;color:#ffe9a8;background:linear-gradient(#7d0b1d,#3a0610);border:1px solid #d9a441;border-radius:8px;padding:9px 18px;min-height:42px;box-shadow:0 0 12px rgba(255,40,70,.35)}
+#qJ .ykBtn:hover,#ykDlg .ykBtn:hover,#ykPrep .ykBtn:hover,#ykEnd .ykBtn:hover{filter:brightness(1.25)}
+.ykBtn[disabled]{opacity:.4;cursor:not-allowed;filter:grayscale(.6)}
+@keyframes ykPulse{0%,100%{box-shadow:0 0 8px rgba(255,30,60,.3),inset 0 0 14px rgba(0,0,0,.7)}50%{box-shadow:0 0 20px rgba(255,30,60,.75),inset 0 0 14px rgba(0,0,0,.7)}}
+/* ---------- บทสนทนา ---------- */
+#ykDlg.top{z-index:9740}
+#ykDlg{position:fixed;inset:0;z-index:9720;display:none;align-items:flex-end;justify-content:center;background:radial-gradient(ellipse at 50% 30%,rgba(60,4,14,.55),rgba(0,0,0,.9));padding:0 10px max(14px,env(safe-area-inset-bottom,0px))}
+#ykDlg.on{display:flex}
+#ykDlg .ykBox{position:relative;width:min(820px,100%);display:flex;gap:14px;align-items:flex-end;background:linear-gradient(#12060a,#060203);border:2px solid #b3122a;border-radius:12px;padding:14px;box-shadow:0 0 30px rgba(255,20,50,.35),0 10px 40px #000}
+#ykDlg .ykPor{flex:none;width:clamp(84px,18vw,150px);aspect-ratio:3/4;border-radius:8px;border:2px solid #d9a441;object-fit:cover;object-position:top;background:#000;filter:contrast(1.1) saturate(.9)}
+#ykDlg .ykMain{flex:1;min-width:0}
+#ykDlg .ykNm{color:#ff2a3c;font-weight:800;letter-spacing:.18em;font-size:13px;margin-bottom:4px;text-shadow:0 0 8px #ff1a35}
+#ykDlg .ykTx{font-size:clamp(15px,2.4vw,20px);line-height:1.65;min-height:5em;color:#f5e9e4}
+#ykDlg .ykNx{position:absolute;right:16px;bottom:8px;color:#d9a441;font-size:12px;animation:ykNx .8s infinite alternate}
+@keyframes ykNx{to{transform:translateY(3px)}}
+#ykDlg .ykCh{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+#ykDlg .ykCh .ykBtn{flex:1;min-width:150px}
+#ykDlg .ykCh .ykNo{background:linear-gradient(#262a38,#12141c);border-color:#6a7390;color:#cfd6ea}
+#ykDlg .ykTag{position:absolute;left:14px;top:-12px;background:#ff2a3c;color:#000;font:800 11px/1 'Noto Sans Thai',sans-serif;letter-spacing:.16em;padding:4px 8px;border-radius:4px;box-shadow:0 0 10px #ff2a3c}
+/* ---------- หน้าต่างเตรียมภารกิจ ---------- */
+#ykPrep{position:fixed;inset:0;z-index:9725;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 0,rgba(70,4,16,.7),rgba(0,0,0,.94));padding:10px;overflow:auto}
+#ykPrep.on{display:flex}
+#ykPrep .ykWin{width:min(900px,100%);max-height:100%;overflow:auto;background:linear-gradient(#10050a,#050204);border:2px solid #b3122a;border-radius:14px;padding:16px;box-shadow:0 0 36px rgba(255,20,50,.35)}
+#ykPrep h2{margin:0;color:#ff2a3c;letter-spacing:.2em;font-size:clamp(18px,3.6vw,26px);text-shadow:0 0 12px #ff1a35}
+#ykPrep .ykSub{color:#d9a441;font-size:12px;letter-spacing:.16em;margin:2px 0 10px}
+#ykPrep .ykCat{margin:12px 0;padding:10px;border:1px solid #4a0a14;border-radius:10px;background:rgba(255,255,255,.02)}
+#ykPrep .ykCat h4{margin:0 0 4px;color:#ffe9a8;letter-spacing:.14em;font-size:14px}
+#ykPrep .ykHint{font-size:12.5px;color:#c9a0a6;font-style:italic;margin:0 0 8px;line-height:1.5}
+#ykPrep .ykOpts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+#ykPrep .ykOpt{cursor:pointer;text-align:left;padding:10px;border-radius:9px;border:1.5px solid #3a2a30;background:#0b0507;color:#e9dcdc;font:600 13px 'Noto Sans Thai',sans-serif;min-height:78px;transition:.15s}
+#ykPrep .ykOpt b{display:block;color:#ffe9a8;letter-spacing:.1em;margin-bottom:3px}
+#ykPrep .ykOpt:hover{border-color:#b3122a}
+#ykPrep .ykOpt.sel{border-color:#ff2a3c;background:linear-gradient(135deg,#3a0610,#12030a);box-shadow:0 0 14px rgba(255,40,70,.55)}
+#ykPrep.lock .ykOpt{cursor:default;opacity:.7}
+#ykPrep.lock .ykOpt.sel{opacity:1}
+#ykPrep .ykFt{display:flex;gap:10px;justify-content:space-between;flex-wrap:wrap;margin-top:12px}
+@media (max-width:640px){#ykPrep .ykOpts{grid-template-columns:1fr}#ykPrep .ykOpt{min-height:0}#ykDlg .ykBox{flex-direction:column;align-items:stretch}#ykDlg .ykPor{width:96px;align-self:center}}
+/* ---------- หน้าจอฉากจบ ---------- */
+#ykEnd{position:fixed;inset:0;z-index:9760;display:none;align-items:center;justify-content:center;text-align:center;padding:20px;overflow:auto}
+#ykEnd.on{display:flex}
+#ykEnd.bad{background:radial-gradient(ellipse at 50% 40%,#3a0308,#000 70%)}
+#ykEnd.true{background:radial-gradient(ellipse at 50% 30%,#3a2a08,#000 72%)}
+#ykEnd .ykIn{width:min(640px,100%);animation:ykFi 1.4s ease-out both}
+@keyframes ykFi{from{opacity:0;transform:translateY(16px)}}
+#ykEnd .ykKicker{letter-spacing:.5em;font-size:clamp(11px,2vw,14px)}
+#ykEnd h1{margin:6px 0 2px;font-size:clamp(28px,7vw,54px);letter-spacing:.14em;font-weight:900}
+#ykEnd.bad h1,#ykEnd.bad .ykKicker{color:#ff2a3c;text-shadow:0 0 18px rgba(255,20,50,.9)}
+#ykEnd.true h1,#ykEnd.true .ykKicker{color:#ffd45a;text-shadow:0 0 18px rgba(255,200,60,.8)}
+#ykEnd .ykBig{font-size:clamp(20px,4.6vw,32px);letter-spacing:.22em;margin:10px 0;font-weight:800}
+#ykEnd.bad .ykBig{color:#ff2a3c}
+#ykEnd .ykQ{font-size:clamp(16px,3vw,22px);color:#d8c0c4;font-style:italic;margin:14px 0 22px}
+#ykEnd .ykGo{font-size:clamp(34px,9vw,70px);font-weight:900;letter-spacing:.2em;color:#ff2a3c;text-shadow:0 0 22px #ff1a35;margin:10px 0 22px}
+#ykEnd .ykRs{margin:16px auto 22px;width:min(460px,100%);border:1px solid #d9a441;border-radius:12px;padding:10px 14px;background:rgba(40,28,4,.55);text-align:left}
+#ykEnd .ykRs div{display:flex;justify-content:space-between;gap:12px;padding:7px 0;border-bottom:1px dashed rgba(217,164,65,.35);font-size:clamp(14px,2.6vw,17px)}
+#ykEnd .ykRs div:last-child{border:0}
+#ykEnd .ykRs b{color:#ffd45a}
+#ykEnd .ykRs .neg{color:#ff6a78}
+#ykEnd .ykNeon{height:3px;margin:12px auto;width:60%;background:linear-gradient(90deg,transparent,#ff2a3c,#d9a441,#ff2a3c,transparent);box-shadow:0 0 14px #ff2a3c}
+#ykFade{position:fixed;inset:0;z-index:9770;background:#000;display:none;align-items:center;justify-content:center;opacity:0;transition:opacity 1.6s ease;color:#f3e9e4;text-align:center;padding:20px}
+#ykFade.on{display:flex}
+#ykFade.show{opacity:1}
+#ykFade .ykTs{font-size:clamp(22px,5.4vw,40px);letter-spacing:.2em;font-weight:300;text-shadow:0 0 18px rgba(255,230,180,.6)}
+#ykFade .ykDt{margin-top:16px;color:#d9a441;font-size:clamp(14px,3vw,19px);letter-spacing:.12em;min-height:1.6em}
+body.ykOver #over{display:none!important}

@@ -1,0 +1,63 @@
+
+/* v50: เมนูแบบ Flat UI — กรอบตกแต่งมีเพียงกรอบหลักของหน้าต่าง */
+#menu{background:rgba(3,7,15,.78)!important;padding:10px!important;}
+#menu .mPanel{
+  width:min(1100px,100%,calc(92vh * 1.7889))!important;
+  height:min(92vh,820px)!important;max-height:92vh!important;min-height:0!important;
+  aspect-ratio:auto!important;display:flex!important;overflow:hidden!important;
+  background:#111827!important;background-image:none!important;
+  border:2px solid #d6a43b!important;border-radius:12px!important;
+  box-shadow:0 16px 48px #0009!important;padding:0!important;
+}
+#menu .mSide{
+  flex:0 0 20%!important;width:20%!important;min-width:150px!important;
+  padding:16px 12px!important;gap:10px!important;
+  background:#0d1422!important;border:0!important;border-right:1px solid #303b50!important;
+  overflow-y:auto!important;
+}
+#menu .mBody{flex:1 1 80%!important;min-width:0!important;min-height:0!important;
+  padding:18px 20px!important;background:#111827!important;border:0!important;overflow:auto!important;}
+#menu .mTitle{padding:4px 2px 12px!important;background:none!important;color:#f2c45c!important;font-weight:700!important;border:0!important;}
+#menu #mCats{display:flex!important;flex-direction:column!important;gap:3px!important;}
+#menu .mCat{display:flex!important;justify-content:flex-start!important;align-items:center!important;
+  min-height:38px!important;padding:8px 10px!important;border:0!important;border-radius:5px!important;
+  background:transparent!important;color:#cbd5e1!important;box-shadow:none!important;text-align:left!important;}
+#menu .mCat:hover{background:#202b3d!important;}
+#menu .mCat.on{background:#263449!important;color:#ffd36a!important;border-left:3px solid #e0a82e!important;padding-left:7px!important;}
+#menu .mClose{margin-top:auto!important;min-height:36px!important;border:0!important;border-radius:5px!important;
+  background:#7f2935!important;color:#fff!important;box-shadow:none!important;}
+#menu #mSub{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;
+  min-height:38px!important;margin:0 0 14px!important;padding:0 0 10px!important;
+  background:transparent!important;border:0!important;border-bottom:1px solid #303b50!important;color:#f2c45c!important;}
+#menu #mSub b{margin-right:8px!important;color:#f2c45c!important;}
+#menu #mSub .btn{min-height:30px!important;padding:5px 12px!important;border:0!important;border-radius:4px!important;
+  background:transparent!important;color:#cbd5e1!important;box-shadow:none!important;}
+#menu #mSub .btn.on{background:#dba82e!important;color:#151a24!important;}
+#menu .mNote{margin:0 0 12px!important;padding:0!important;background:none!important;border:0!important;color:#9aa8bd!important;}
+#menu #pn,#menu #sysPane{min-width:0!important;background:transparent!important;border:0!important;box-shadow:none!important;}
+#menu .c,#menu .hireCard{
+  box-sizing:border-box!important;max-width:100%!important;margin:0!important;padding:12px 4px!important;
+  background:transparent!important;background-image:none!important;border:0!important;border-bottom:1px solid #303b50!important;
+  border-radius:0!important;box-shadow:none!important;color:#e5eaf2!important;
+}
+#menu .c:last-child{border-bottom:0!important;}
+#menu .c .r{margin-bottom:7px!important;}
+#menu .charPortrait{border:0!important;border-radius:5px!important;background:transparent!important;}
+#menu .sh{display:flex!important;flex-wrap:wrap!important;gap:6px!important;margin:8px 0 0!important;}
+#menu .btn{box-shadow:none!important;}
+#menu .c .btn{border:1px solid #46536a!important;border-radius:5px!important;background:#202b3d!important;color:#e8edf5!important;}
+#menu .c .btn:hover{background:#2b3a51!important;}
+#menu .c input{background:#0c1320!important;border:1px solid #46536a!important;color:#fff!important;}
+#menu .b{border-radius:2px!important;box-shadow:none!important;}
+#menu .g{gap:0 14px!important;}
+#menu .mReturnTitle{width:100%!important;min-height:38px!important;}
+@media(max-width:700px){
+ #menu{padding:4px!important;}
+ #menu .mPanel{width:100%!important;height:94vh!important;max-height:94vh!important;}
+ #menu .mSide{flex-basis:24%!important;width:24%!important;min-width:105px!important;padding:10px 6px!important;gap:6px!important;}
+ #menu .mCat{min-height:34px!important;padding:5px 6px!important;font-size:12px!important;}
+ #menu .mCat.on{padding-left:4px!important;}
+ #menu .mBody{padding:12px 10px!important;}
+ #menu #mSub{gap:5px!important;margin-bottom:10px!important;}
+ #menu #mSub .btn{padding:4px 7px!important;font-size:12px!important;}
+}
