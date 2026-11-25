@@ -52,14 +52,14 @@ class Conn {
   end() { if (!this.alive) return; this.alive = false; try { this.sock.destroy(); } catch (e) { } if (this.onclose) this.onclose(); }
   feed(d) {
     this.buf = Buffer.concat([this.buf, d]);
-    if (this.buf.length > 1 << 20) return this.end();
+    if (this.buf.length > 3 << 20) return this.end();
     for (;;) {
       const b = this.buf; if (b.length < 2) return;
       const fin = b[0] & 0x80, op = b[0] & 0x0f, masked = b[1] & 0x80;
       let len = b[1] & 0x7f, off = 2;
       if (len === 126) { if (b.length < 4) return; len = b.readUInt16BE(2); off = 4; }
       else if (len === 127) { if (b.length < 10) return; len = Number(b.readBigUInt64BE(2)); off = 10; }
-      if (len > 64 * 1024) return this.end();
+      if (len > 1000 * 1024) return this.end();
       if (!masked) return this.end();
       if (b.length < off + 4 + len) return;
       const mask = b.slice(off, off + 4), payload = Buffer.alloc(len);
