@@ -762,12 +762,12 @@ function updateKitchenStaff(dm,dr){
 }
 
 function frame(ts){const d0=Math.min(.1,(ts-lt)/1000||0);lt=ts;const paused=S.paused||CUT.on,clockRate=S.paused?0:(DEV_TEST_MODE?DEV_TEST_SPEED:S.speed),dr=paused?0:Math.min(.5,d0*clockRate),dm=d0*clockRate*1440/S.dl;
-if(!S.over&&S.money<-10000){S.over=1;show()}if(!S.over){S.t+=dm;evTick(dm);(window.OFC&&OFC.floor&&S.ofc)?OFC.simulate(dm,dr):(S.emp.forEach(e=>ai(e,dm,dr)),tickMeeting(dm));updateKitchenStaff(dm,dr);customerTick(dm,dr);window.THIEF&&THIEF.tick(dm,dr);window.LOAN&&LOAN.tick(dm,dr);window.GHOST&&GHOST.tick(dm,dr,d0);
+if(!S.over&&S.money<-10000){S.over=1;show()}if(!S.over){const __cf=!!(window.COOP&&COOP.isFollower&&COOP.isFollower());if(!__cf){S.t+=dm;evTick(dm);(window.OFC&&OFC.floor&&S.ofc)?OFC.simulate(dm,dr):(S.emp.forEach(e=>ai(e,dm,dr)),tickMeeting(dm));updateKitchenStaff(dm,dr);customerTick(dm,dr);window.THIEF&&THIEF.tick(dm,dr);window.LOAN&&LOAN.tick(dm,dr);window.GHOST&&GHOST.tick(dm,dr,d0);
 if(S.kitchenStaff&&S.kitchenStaff.length){
  const cooks=S.kitchenStaff.filter(e=>e.charId==='uncle-chai'||e.charId==='aunt-phen').length;
  if(cooks)S.emp.forEach(e=>{if(e.st!=='home'){e.sr=cl(e.sr-dm*.018*cooks);e.en=cl(e.en+dm*.004*cooks)}});
 }
-if(S.t>=1440){S.t-=1440;endDay()}doneChk();if(!playerMovementBlocked()){movePl(d0)}else{clearPlayerInput()}}
+if(S.t>=1440){S.t-=1440;endDay()}}doneChk();if(!playerMovementBlocked()){movePl(d0)}else{clearPlayerInput()}}
 window.CEORPG&&CEORPG.tick(d0,dm);draw(ts/1000);window.GHOST&&GHOST.draw(ts/1000);evDraw();hud();if(++fc%15==0){info();live()}requestAnimationFrame(frame)}
 const DEC=['plant','lamp','coffee','shelf'],ROT=['desk','sofa','fridge','coffee','shelf','cab','counter','bdesk','sink','toilet'];
 const hs=(x,y)=>(Math.imul((x*73856093)^(y*19349663),2654435761)>>>8&255)/255;
@@ -992,7 +992,7 @@ if(S.customer&&S.customer.active&&S.customer.active.state!=='gone'){const c=S.cu
 if(window.LOAN)LOAN.pushDraw(L,g,t);
 if(window.RIM&&RIM.pushDraw)RIM.pushDraw(L,g,t);
 S.emp.forEach(e=>{if(e.st=='home'||e.st==='errandWait')return;if(window.OFC&&OFC.floor&&S.ofc&&!OFC.here(e))return;const sit=e.st=='work';L.push([e.y+(sit?18:12),()=>{drawEmployee(g,e);try{if(e.charId==='rei'&&window.REI)REI.over(g,e,t)}catch(x){}if(e.bub){g.fillStyle='#fff';g.fillRect(e.x-9,e.y-42,18,10);g.fillStyle='#333';for(let i=0;i<3;i++)if((Math.floor(t*4)+i)%3)g.fillRect(e.x-6+i*5,e.y-38,2,2)}if(sel==e.id){g.strokeStyle='#ffd400';g.strokeRect(e.x-12,e.y-34,24,48)}}])});
-L.push([S.pl.y+12,()=>{drawCeo(g);window.CEORPG&&CEORPG.drawFx(g,t)}]);
+L.push([S.pl.y+12,()=>{drawCeo(g);window.CEORPG&&CEORPG.drawFx(g,t)}]);try{window.COOP&&COOP.officeList&&COOP.officeList(L,g)}catch(e){}
 L.sort((a,b)=>a[0]-b[0]).forEach(l=>l[1]());
 // World-space alert above the physical Manager computer (bdesk placed at tile 12,5).
 {
@@ -5355,6 +5355,7 @@ function drawBeach(g,t,preview=false){
    const row=[0,2,1,3][p.d],col=CEOCOL(p.mv,p.f);
    CEOIMG(g,col,row,x-CEO_DW/2*SC,y-(CEO_DH-1)*SC,CEO_DW*SC,CEO_DH*SC);
   }else{g.fillStyle='#f1c9a5';g.fillRect(x-9,y-66,18,20);g.fillStyle='#f4b400';g.fillRect(x-12,y-44,24,30)}
+  try{window.COOP&&COOP.sceneDraw&&COOP.sceneDraw(g,SC)}catch(e){}
  }
 
  const staticSolids=[{x:106,y:98,w:118,h:186},{x:70,y:170,w:32,h:40},{x:224,y:170,w:32,h:40},{x:638,y:204,w:190,h:64},{x:700,y:274,w:70,h:22},{x:430,y:370,w:190,h:76},{x:455,y:458,w:140,h:44},{x:700,y:340,w:206,h:70},{x:890,y:287,w:30,h:40},{x:65,y:417,w:30,h:40},{x:330,y:128,w:100,h:64}];

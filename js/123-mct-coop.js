@@ -192,7 +192,13 @@
   function applyRoom(m) {
     Co.you = m.you; Co.host = m.host; Co.code = m.code; Co.opts = m.opts; Co.others.clear();
     m.players.forEach(upsert);
-    try { if (!S.coopInit) { S.coopInit = 1; S.ceo = BOOT.name; if (BOOT.rel && BOOT.rel !== 'none' && window.REL && S.rg && !S.rg.religionId) S.rg.religionId = BOOT.rel; } else if (!S.ceo) S.ceo = BOOT.name; } catch (e) { }
+    (function setRel(n) {                                         // ศาสนาเลือกไว้ในเมนู Co-op แล้ว → ไม่ต้องถามซ้ำในเกม
+      try { const ok = ['buddhism', 'christianity', 'islam', 'none'].indexOf(BOOT.rel) >= 0; if (!ok) return; if (S.rg) { if (!S.rg.religionId) { S.rg.religionId = BOOT.rel; S.rg.religionLocked = true; } return; } } catch (e) { return; }
+      if (n < 40) setTimeout(() => setRel(n + 1), 250);
+    })(0);
+    try { const g = CHAR_G[BOOT.char] || 'm'; if (g === 'r') { S.codeUnlocks = S.codeUnlocks || {}; S.codeUnlocks.rei = 1; } S.ceoGender = g; if (window.CEOG) CEOG.apply(true); } catch (e) { }
+    try { if (m.opts && m.opts.office === 'shared' && m.host !== m.you) S.paused = 0; } catch (e) { }
+    try { if (!S.coopInit) { S.coopInit = 1; S.ceo = BOOT.name; } else if (!S.ceo) S.ceo = BOOT.name; } catch (e) { }
     Co.sleepN = 0; Co.sleepTot = m.players.length + 1; Co.sleepNames = [];
     if (m.clock && Co.host !== Co.you) applyClock(m.clock, true);
     if (m.biz && m.opts.office === 'shared' && Co.host !== Co.you) { for (const k in m.biz) applyBiz(k, m.biz[k]); }
@@ -240,7 +246,7 @@
   }
 
   /* ---------------------------------------------------------------- clock / business / sleep sync */
-  const BIZ_SKIP = { pl: 1, name: 1, money: 1, day: 1, t: 1, speed: 1, paused: 1, dl: 1, rg: 1, ceoRPG: 1, q: 1, ceo: 1, coopInit: 1, over: 1 };
+  const BIZ_SKIP = { pl: 1, ceoGender: 1, ceoOutfitId: 1, codeUnlocks: 1, name: 1, money: 1, day: 1, t: 1, speed: 1, paused: 1, dl: 1, rg: 1, ceoRPG: 1, q: 1, ceo: 1, coopInit: 1, over: 1 };
   Co.bizLast = {};
   Co.isFollower = () => !!(Co.on && Co.opts && Co.opts.office === 'shared' && Co.host && Co.host !== Co.you);
   function applyClock(c, force) {
@@ -258,7 +264,6 @@
     if (!Co.on || typeof S === 'undefined' || !S) return;
     if (Co.host === Co.you) send({ t: 'clk', day: S.day, tm: Math.round(S.t * 10) / 10 });
     if (Co.opts && Co.opts.office === 'shared') {
-      if (Co.isFollower()) { try { S.paused = 1; } catch (e) { } }    // ผู้ตามไม่จำลองธุรกิจเอง ใช้ของโฮสต์
       const base = Co.isFollower() && !Co.bizInit; if (base) Co.bizInit = 1;
       for (const k in S) {
         if (BIZ_SKIP[k]) continue;
@@ -308,8 +313,13 @@
   /* ---------------------------------------------------------------- per-tick sync */
   setInterval(() => {
     if (!Co.on) return;
-    let st = { x: 0, y: 0, dir: 0, frame: 0, moving: 0 }; try { st = window.__CEO_CTX.st; } catch (e) { }
-    send({ t: 'st', scene: mine(), x: Math.round(st.x), y: Math.round(st.y), row: (st.dir | 0) & 3, col: st.moving ? ((st.frame | 0) & 3) : 0 });
+    let pos = null;
+    try {
+      const sc = mine();
+      if (sc === 'office') { const p = S.pl; pos = { scene: 'office', x: p.x, y: p.y, row: p.d | 0, col: p.mv ? 1 : 0 }; }
+      else { const st = window.__CEO_CTX.st; pos = { scene: sc, x: st.x, y: st.y, row: st.dir | 0, col: st.moving ? 1 : 0 }; }
+    } catch (e) { }
+    if (pos && isFinite(pos.x) && isFinite(pos.y)) send({ t: 'st', scene: pos.scene, x: Math.round(pos.x), y: Math.round(pos.y), row: pos.row & 3, col: pos.col });
     // shared money: send deltas
     if (Co.opts && Co.opts.money === 'shared' && typeof S !== 'undefined') {
       const d = S.money - Co.prevMoney;
@@ -360,49 +370,70 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   setInterval(() => { if (hud && hudOpen) renderHud(); }, 2000);
 
-  /* ---------------------------------------------------------------- draw other players on top of the scene canvas */
-  let ov = null, octx = null;
+  /* ---------------------------------------------------------------- draw other players INSIDE the game's own canvases (office depth list + scene drawCEO hook) */
+  const CHAR_G = { 'blue-suit-male': 'm', 'mild-formal': 'f', 'rei': 'r' };
+  const ATL = {};
+  function atlasOf(ch) {
+    const g = CHAR_G[ch] || 'm';
+    if (!ATL[g]) {
+      let src = null;
+      try { const A = window.__CEO_ART; src = g === 'f' ? A.f.atlas : g === 'r' ? (window.REI_ART && REI_ART.atlas) : A.atlas; } catch (e) { }
+      if (!src) return null;
+      const im = new Image(); im.src = src; ATL[g] = im;
+    }
+    return ATL[g];
+  }
+  const myOffice = () => (Co.opts && Co.opts.office === 'shared') ? 'o0' : 'o' + Co.you;
+  const fresh = o => o.seen && performance.now() - o.seen < 3000;
+  let lastT = performance.now();
   function loop(t) {
     requestAnimationFrame(loop);
+    const dt = Math.min(0.1, (t - lastT) / 1000 || 0.016); lastT = t;
     if (!Co.on) return;
-    const dt = 0.016;
-    for (const o of Co.others.values()) { const k = 1 - Math.pow(0.0005, dt); o.x += (o.tx - o.x) * k; o.y += (o.ty - o.y) * k; if (o.sayT > 0) o.sayT -= dt; }
-    let ctx; try { ctx = window.__CEO_CTX; } catch (e) { return; }
-    const cvs = $('ceoSceneCanvas'), wrap = $('ceoSceneCanvasWrap');
-    if (!ctx || !cvs || !wrap) return;
-    if (!ov) { ov = document.createElement('canvas'); ov.id = 'coopOverlay'; ov.width = 960; ov.height = 600; document.body.appendChild(ov); octx = ov.getContext('2d'); }
-    const rc = cvs.getBoundingClientRect(); ov.style.left = rc.left + 'px'; ov.style.top = rc.top + 'px'; ov.style.width = rc.width + 'px'; ov.style.height = rc.height + 'px'; ov.style.display = rc.width > 0 ? 'block' : 'none';
-    octx.setTransform(1, 0, 0, 1, 0, 0); octx.clearRect(0, 0, 960, 600);
-    const st = ctx.st; if (!st || !st.active) return;
-    const here = st.place || 'office', z = st.zoom || 1;
-    if (here === 'sea' || here === 'ride') return;            // ฉากเหล่านี้ใช้กล้องของตัวเอง (แสดงในรายชื่อห้องแทน)
-    octx.save(); octx.scale(z, z); octx.translate(-Math.round(st.camX || 0), -Math.round(st.camY || 0));
-    const list = [...Co.others.values()].filter(o => o.scene === here && o.seen && performance.now() - o.seen < 3000).sort((a, b) => a.y - b.y);
-    for (const o of list) {                                       // เพื่อนยืนทับตัวเรา (จุดเกิดเดียวกัน) → ขยับภาพเพื่อนออกด้านข้างให้เห็นเป็นอีกคน
-      let dx = 0; const mx = +st.x, my = +st.y;
-      if (isFinite(mx) && isFinite(my)) { const ddx = o.x - mx, ddy = o.y - my, d = Math.hypot(ddx, ddy); if (d < 46) { const side = (ddx !== 0 ? Math.sign(ddx) : ((o.id | 0) % 2 ? 1 : -1)); dx = side * (46 - d) + side * 6; } }
-      const ox = o.x, oy = o.y; o.x = ox + dx; drawRemote(octx, o); o.x = ox; o.y = oy;
+    for (const o of Co.others.values()) {
+      const k = 1 - Math.pow(0.0005, dt), ox = o.x, oy = o.y;
+      o.x += (o.tx - o.x) * k; o.y += (o.ty - o.y) * k;
+      const sp = Math.hypot(o.x - ox, o.y - oy) / dt;
+      o.mv = o.col > 0 || sp > 20; if (o.mv) o.f = (o.f || 0) + dt * 2.6; else o.f = 0;
+      if (o.sayT > 0) o.sayT -= dt;
     }
-    octx.restore();
   }
-  function drawRemote(g, o) {
-    const x = Math.round(o.x), y = Math.round(o.y);
-    g.fillStyle = 'rgba(0,0,0,.30)'; g.beginPath(); g.ellipse(x, y - 1, 18, 7, 0, 0, Math.PI * 2); g.fill();
-    let drawn = false;
-    try {
-      const pack = CHAR_IMAGES[o.char], rows = pack && pack.frames;
-      if (rows && rows.length) {
-        const row = [0, 2, 1, 3][o.row & 3], frames = rows[row] || rows[0];
-        const im = frames && (frames[(o.col | 0) % Math.min(4, frames.length)] || frames[0]);
-        if (im && im.complete && im.naturalWidth) { g.imageSmoothingEnabled = false; g.drawImage(im, 0, 0, 64, 80, x - 30.4, y - 81.6, 60.8, 83.6); g.imageSmoothingEnabled = true; drawn = true; }
-      }
-    } catch (e) { }
-    if (!drawn) { g.fillStyle = '#7fb4ff'; g.fillRect(x - 12, y - 56, 24, 40); g.fillStyle = '#f1c9a5'; g.fillRect(x - 9, y - 76, 18, 20); }
-    g.font = 'bold 13px Kanit,sans-serif'; g.textAlign = 'center'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.85)'; g.fillStyle = '#fff';
-    g.strokeText(o.name, x, y - 88); g.fillText(o.name, x, y - 88);
-    if (o.sayT > 0 && o.say) { const w = Math.min(220, g.measureText(o.say).width + 16); g.fillStyle = 'rgba(255,255,255,.95)'; g.fillRect(x - w / 2, y - 122, w, 22); g.fillStyle = '#111'; g.font = '12px Kanit,sans-serif'; g.fillText(o.say.slice(0, 40), x, y - 106); }
+  function drawAv(g, o, x, y, sc) {                                   // same sprite sheet + metrics as the game's own CEO
+    x = Math.round(x); y = Math.round(y);
+    g.save();
+    g.fillStyle = 'rgba(0,0,0,.30)'; g.beginPath(); g.ellipse(x, y - 1, 11 * sc, 4 * sc, 0, 0, Math.PI * 2); g.fill();
+    const im = atlasOf(o.char), DW = 40 * sc, DH = 50 * sc;
+    if (im && im.complete && im.naturalWidth) {
+      const cw = im.naturalWidth / 16, ch = im.naturalHeight / 4, row = [0, 2, 1, 3][(o.row | 0) & 3];
+      const col = o.mv ? 1 + ((Math.floor((o.f || 0) * 4) % 12) + 12) % 12 : 0;
+      g.imageSmoothingEnabled = true; g.imageSmoothingQuality = 'high';
+      g.drawImage(im, col * cw, row * ch, cw, ch, x - DW / 2, y - DH + sc, DW, DH);
+    } else { g.fillStyle = '#7fb4ff'; g.fillRect(x - 9 * sc, y - 30 * sc, 18 * sc, 22 * sc); g.fillStyle = '#f1c9a5'; g.fillRect(x - 7 * sc, y - 42 * sc, 14 * sc, 12 * sc); }
+    const fs = Math.max(9, Math.round(7 * sc));
+    g.font = 'bold ' + fs + 'px Kanit,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.lineWidth = 3; g.strokeStyle = 'rgba(0,0,0,.85)'; g.fillStyle = '#ffe27a';
+    const ny = y - DH - 2; g.strokeText(o.name, x, ny); g.fillText(o.name, x, ny);
+    if (o.sayT > 0 && o.say) { const tx = o.say.slice(0, 40), w = Math.min(240, g.measureText(tx).width + 14); g.fillStyle = 'rgba(255,255,255,.95)'; g.fillRect(x - w / 2, ny - fs - 18, w, fs + 8); g.fillStyle = '#111'; g.fillText(tx, x, ny - 15); }
+    g.restore();
   }
-
+  // office: called from the core draw() with its depth-sorted list L (same coordinates as S.pl)
+  Co.officeList = function (L, g) {
+    if (!Co.on) return;
+    const off = myOffice();
+    for (const o of Co.others.values()) {
+      if (o.scene !== 'office' || o.office !== off || !fresh(o)) continue;
+      L.push([o.y + 12, () => drawAv(g, o, o.x, o.y + 10, 1)]);
+    }
+  };
+  // outside scenes: called at the end of the scene's drawCEO (camera transform already applied)
+  let sceneDrawn = -1;
+  Co.sceneDraw = function (g, sc) {
+    if (!Co.on) return;
+    const fr = Math.floor(performance.now() / 8); if (fr === sceneDrawn) return; sceneDrawn = fr;
+    let st; try { st = window.__CEO_CTX.st; } catch (e) { return; }
+    if (!st || !st.active) return;
+    const here = st.place || 'office'; if (here === 'ride') return;
+    for (const o of Co.others.values()) if (o.scene === here && fresh(o)) drawAv(g, o, o.x, o.y, sc || 1.9);
+  };
 
   /* ---------------------------------------------------------------- cutscene bridge (ออฟฟิศรวม: คัตซีนเชื่อมกัน) */
   const cutBusy = () => { try { return !!(typeof CUT !== 'undefined' && CUT.on); } catch (e) { return false; } };
