@@ -170,7 +170,7 @@
   function initLobbyButton() {
     const L = $('lobby'); if (!L || $('coopBtn')) return;
     const b = document.createElement('button'); b.id = 'coopBtn'; b.type = 'button'; b.innerHTML = '<span class="ic">🤝</span><span class="tx">Co-op เล่นกับเพื่อน</span>';
-    L.appendChild(b);
+    (L.querySelector('.lz-stage')||L).appendChild(b);
     let menu = null; b.onclick = () => { menu = menu || buildMenu(); menu.classList.add('show'); };
   }
 
@@ -240,7 +240,7 @@
   }
 
   /* ---------------------------------------------------------------- clock / business / sleep sync */
-  const BIZ_SKIP = { name: 1, money: 1, day: 1, t: 1, speed: 1, paused: 1, dl: 1, rg: 1, ceoRPG: 1, q: 1, ceo: 1, coopInit: 1, over: 1 };
+  const BIZ_SKIP = { pl: 1, name: 1, money: 1, day: 1, t: 1, speed: 1, paused: 1, dl: 1, rg: 1, ceoRPG: 1, q: 1, ceo: 1, coopInit: 1, over: 1 };
   Co.bizLast = {};
   Co.isFollower = () => !!(Co.on && Co.opts && Co.opts.office === 'shared' && Co.host && Co.host !== Co.you);
   function applyClock(c, force) {
@@ -378,7 +378,11 @@
     if (here === 'sea' || here === 'ride') return;            // ฉากเหล่านี้ใช้กล้องของตัวเอง (แสดงในรายชื่อห้องแทน)
     octx.save(); octx.scale(z, z); octx.translate(-Math.round(st.camX || 0), -Math.round(st.camY || 0));
     const list = [...Co.others.values()].filter(o => o.scene === here && o.seen && performance.now() - o.seen < 3000).sort((a, b) => a.y - b.y);
-    for (const o of list) drawRemote(octx, o);
+    for (const o of list) {                                       // เพื่อนยืนทับตัวเรา (จุดเกิดเดียวกัน) → ขยับภาพเพื่อนออกด้านข้างให้เห็นเป็นอีกคน
+      let dx = 0; const mx = +st.x, my = +st.y;
+      if (isFinite(mx) && isFinite(my)) { const ddx = o.x - mx, ddy = o.y - my, d = Math.hypot(ddx, ddy); if (d < 46) { const side = (ddx !== 0 ? Math.sign(ddx) : ((o.id | 0) % 2 ? 1 : -1)); dx = side * (46 - d) + side * 6; } }
+      const ox = o.x, oy = o.y; o.x = ox + dx; drawRemote(octx, o); o.x = ox; o.y = oy;
+    }
     octx.restore();
   }
   function drawRemote(g, o) {
@@ -449,3 +453,6 @@
     if ($('lobby')) initLobbyButton(); else document.addEventListener('DOMContentLoaded', initLobbyButton);
   }
 })();
+
+/* lobby button: right of Start */
+(function(){var st=document.createElement('style');st.textContent="#lobby .lz-stage #coopBtn{position:absolute!important;left:64.8%!important;top:36.6%!important;right:auto!important;bottom:auto!important;width:15%!important;height:10.7%!important;min-width:0!important;max-width:none!important;padding:0 .4em!important;justify-content:center;font-size:clamp(9px,1.9vmin,17px)!important;white-space:normal!important;line-height:1.05}#lobby .lz-stage #coopBtn .ic{width:auto}";document.head.appendChild(st)})();
